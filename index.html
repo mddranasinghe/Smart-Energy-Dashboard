@@ -218,7 +218,7 @@ var gauge =[
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'orange'",// color del medidor(eval);
         units:"'W'",// leyenda abajo del valor (eval)
-        lineWidth:'pos/10',// ancho del segmento
+        lineWidth:'pos/8',// ancho del segmento
         lineSize:6,// largo del segmento
         lineOffset:0,
         needleStart:0,
@@ -227,15 +227,15 @@ var gauge =[
         pointColor:"'green'",
 
         scale:{
-          lineWidth:'pos/10',
+          lineWidth:'pos/8',
           lineSize:2,
           color:"'white'",
-          lineOffset:1,
+          lineOffset:0,
 
         },
 
         scaleOver:{
-          lineWidth:'pos/10',
+          lineWidth:'pos/8',
           lineSize:6,
           color:"'red'",
           lineOffset:0
@@ -245,13 +245,13 @@ var gauge =[
         },
 
           scaleLimit:{
-          lineWidth:'pos/10',
-          lineSize:4,
+          lineWidth:'pos/8', 
+          lineSize:6,
           color:"'orange'",
-          needleStart:-4,
-          needleEnd:4,
-          pointPos:11,
-          lineOffset:-3
+          needleStart:0,
+          needleEnd:-6,
+          pointPos:9,
+          lineOffset:0
 
 
         }
@@ -467,7 +467,7 @@ function setValueText(v)
 function setGauge()  
 {
   active=0;
-  gauge[active].value=487.9;
+  gauge[active].value=387.9;
   drawG();
 }
 
