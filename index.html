@@ -90,7 +90,7 @@ tspan{
 }
 #valtext,#valtext2,#valtext3{
   font-family:'Lato';
-  font-size:3em;
+  font-size:2.5em;
   font-weight:300;
   fill:white;
 }
@@ -210,7 +210,7 @@ var gauge =[
         angle:270,// angulo total del medidor
         start:155,// angulo de inicio del medidor
         divs:50,// divisiones
-        value:487.09,// valor inicial
+        value:387.09,// valor inicial
         limit:450,// valor del limite (escala secundaria)
         min:0,// valor mínimo del medidor
         max:500,// valor máximo (fondo de escala) 
@@ -270,18 +270,23 @@ var cnt=0;
 var active=0;
 var pos=0;
 
-var limiteq=0;
+/*var limiteq=0;
  var pointq= 0;
   var valtextq =0;
   var lbltextq=0;
-  var gr=0;
-function drawG()
+  var gr=0;*/
+ // var valtextq =0;
+function drawG(value, active, limite, point, valtext, lbltext, grq)
 {
-
+  var limiteq=limite;
+  var pointq= point;
+  var valtextq =valtext;
+  var lbltextq=lbltext;
+  var gr=0;
   var g = gauge[active];
   var value= eval(g.value);
   console.log(value);
- // var gr = "g1";
+  var gr = grq;
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
   var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
   var scale = (g.scale) ? g.scale:g;                 
@@ -446,25 +451,25 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
   if(g.refresh)rfrsh=g.refresh;
       setTimeout(function(){
       
-      drawG();
+      drawG(value, active, limite, point, valtext, lbltext, grq);
       },rfrsh);
     
   
-  
-}
-
-
-function setValueText(v)
+      function setValueText(v)
 {
   var valueInt = v;
  // var valueDec = ((v - valueInt)*10);
   valtextq.innerHTML= valueInt*10 ;
 
 }
+}
+
+
+
                 
 
 
-
+/*
 function setGauge() {
 
   var limiteAr = ['limite', 'limite2', 'limite3'];
@@ -483,7 +488,7 @@ function setGauge() {
      gr = gAr[i];
 
    
-    drawG(); 
+    drawG(limiteq, pointq, valtextq, lbltextq, gr); 
   }
  
   /*  active=0;
@@ -493,7 +498,30 @@ function setGauge() {
      valtextq = document.getElementById(valtextAr[0]);
      lbltextq =  document.getElementById(lbltextAr[0]);
      gr = gAr[0];
-    drawG(); */
+    drawG(); *//*
+}
+
+setGauge();*/
+
+function setGauge() {
+  var limiteAr = ['limite', 'limite2', 'limite3'];
+  var pointAr = ['point', 'point2', 'point3'];
+  var valtextAr = ['valtext', 'valtext2', 'valtext3'];
+  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3'];
+  var gAr = ['g1', 'g1-2', 'g1-3'];
+
+  for (var i = 0; i < 3; i++) {
+    var active = 0;
+    var value = 387.9;
+
+    var limite = document.getElementById(limiteAr[i]);
+    var point = document.getElementById(pointAr[i]);
+    var valtext = document.getElementById(valtextAr[i]);
+    var lbltext = document.getElementById(lbltextAr[i]);
+    var grq = gAr[i];
+
+    drawG(value, active, limite, point, valtext, lbltext, grq);
+  }
 }
 
 setGauge();
