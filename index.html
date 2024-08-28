@@ -90,7 +90,7 @@ tspan{
 }
 #valtext,#valtext2,#valtext3{
   font-family:'Lato';
-  font-size:2em;
+  font-size:3em;
   font-weight:300;
   fill:white;
 }
@@ -99,9 +99,10 @@ tspan{
 #lbltext,
 #lbltext3,#lbltext2{
   font-family:'Lato';
-  font-size:.7em;
+  font-size:2em;
   font-weight:300;
   fill:white;
+  
 }
 
 
@@ -218,7 +219,7 @@ var gauge =[
         limitColor:"'orange'",// color del medidor(eval);
         units:"'W'",// leyenda abajo del valor (eval)
         lineWidth:'pos/10',// ancho del segmento
-        lineSize:3,// largo del segmento
+        lineSize:6,// largo del segmento
         lineOffset:0,
         needleStart:0,
         needleEnd:-5,
@@ -227,15 +228,15 @@ var gauge =[
 
         scale:{
           lineWidth:'pos/10',
-          lineSize:1,
+          lineSize:4,
           color:"'white'",
-          lineOffset:1,
+          lineOffset:0,
 
         },
 
         scaleOver:{
           lineWidth:'pos/10',
-          lineSize:3,
+          lineSize:6,
           color:"'red'",
           lineOffset:0
 
@@ -245,7 +246,7 @@ var gauge =[
 
           scaleLimit:{
           lineWidth:'pos/10',
-          lineSize:3,
+          lineSize:4,
           color:"'orange'",
           needleStart:-3,
           needleEnd:2,
