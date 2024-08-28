@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style>
+	
+
+body{
+  font-size:26px;
+  color:cyan;
+  
+  background:rgb(39, 33, 33);
+}
+
+tspan{
+  font-size:.4em;
+ }
+
+
+#gg{
+  position:fixed;
+  top:calc(15vh - 150px);
+  left:calc(20vw - 150px);
+  width:300px;
+  height:300px;
+  background:#111;
+}
+#gg2{
+  position:fixed;
+  top:calc(15vh - 150px);
+  left:calc(50vw - 150px);
+  width:300px;
+  height:300px;
+  background:#111;
+}
+
+#gg3{
+  position:fixed;
+  top:calc(15vh - 150px);
+  left:calc(80vw - 150px);
+  width:300px;
+  height:300px;
+  background:#111;
+}
+
+.dial{
+   fill:transparent;
+  stroke-linecap:"round";
+  stroke-dasharray:.16em,.27em;
+  r:5em;
+}
+
+#dial_bg{
+  stroke:green;
+  stroke-width:.8em;
+}
+#dial{
+  stroke-width:2em; 
+}
+
+#point,#point2,#point3{
+  fill:cyan;
+ r: .15em;
+
+}
+
+#limite,
+#limite2,
+#limite3{
+  fill:orange;
+ r: .15em;
+
+}
+
+
+
+
+
+#needles{
+  transform: translateY(-.5em);
+  r: 1.8em;
+
+}
+.smooth{
+  transition: all .5s linear
+ /*transition:  all 1s cubic-bezier(0.01,0.02,0.4,  1);
+ */
+}
+#valtext,#valtext2,#valtext3{
+  font-family:'Lato';
+  font-size:2em;
+  font-weight:300;
+  fill:white;
+}
+
+
+#lbltext,
+#lbltext3,#lbltext2{
+  font-family:'Lato';
+  font-size:.7em;
+  font-weight:300;
+  fill:white;
+}
+
+
+.button{
+  color:black;
+  font-family:'Lato';
+  font-weight:300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border:1px solid white;
+  width:50px;
+  height:50px;
+  text-align:center;
+  border-radius:50%;
+  margin:10px;
+  background:orange;
+  cursor:pointer;
+  transition:all .5s linear;
+}
+.button:hover{
+  background:red;
+}
+
+
+
+  </style>
+</head>
+ 
+<body>
+
+  <svg id="gg">
+  <g id="g1"></g>
+    <g id="g2">
+       <text id="valtext" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+      
+     <text id="lbltext" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+    <circle id ="limite" cx="50%" cy="50%" />
+  
+    
+  <circle id ="point" class="" cx="50%" cy="50%" />
+    <text id="limitText" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+  
+    </g>  
+  </svg>
+  
+  <div id="gauge2" class="gauge-container">
+    <svg id="gg2">
+      <g id="g1-2"></g>
+      <g id="g2-2">
+        <text id="valtext2" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+        <text id="lbltext2" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+        <circle id="limite2" cx="50%" cy="50%" />
+        <circle id="point2" cx="50%" cy="50%" />
+        <text id="limitText2" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+      </g>
+    </svg>
+  </div>
+
+
+  <div id="gauge3" class="gauge-container">
+    <svg id="gg3">
+      <g id="g1-3"></g>
+      <g id="g3-3">
+        <text id="valtext3" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+        <text id="lbltext3" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+        <circle id="limite3" cx="50%" cy="50%" />
+        <circle id="point3" cx="50%" cy="50%" />
+        <text id="limitText3" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+      </g>
+    </svg>
+  </div>
+
+
+  <script>
+   
+function  addPath(gr,sx,sy,ex,ey,g)
+
+{
+  
+  
+  newpath = document.createElementNS('http://www.w3.org/2000/svg',"path"); 
+  
+  sx+=150;
+  sy+=150;
+  ex+=150;
+  ey+=150;
+ // stroke=color_value;
+newpath.setAttributeNS(null, "id", "pathIdD");  
+newpath.setAttributeNS(null, "d", "M "+sx+" "+sy+" L "+ex+" "+ey);  
+newpath.setAttributeNS(null, "stroke", eval(g.color)); 
+newpath.setAttributeNS(null, "stroke-width", eval(g.lineWidth));  
+newpath.setAttributeNS(null, "opacity", 1);  
+newpath.setAttributeNS(null, "fill", "none");
+
+document.getElementById(gr).appendChild(newpath);
+
+
+}
+
+var gauge =[
+      {
+        ////////  KM/H  /////////
+        radius:20,//radio del medidor
+        angle:270,// angulo total del medidor
+        start:155,// angulo de inicio del medidor
+        divs:50,// divisiones
+        value:487.09,// valor inicial
+        limit:450,// valor del limite (escala secundaria)
+        min:0,// valor mínimo del medidor
+        max:500,// valor máximo (fondo de escala) 
+        color:"'cyan'",// color del medidor(eval);
+        alertColor:"'red'",// color del medidor(eval);
+        limitColor:"'orange'",// color del medidor(eval);
+        units:"'W'",// leyenda abajo del valor (eval)
+        lineWidth:'pos/10',// ancho del segmento
+        lineSize:3,// largo del segmento
+        lineOffset:0,
+        needleStart:0,
+        needleEnd:-5,
+        pointPos: -2,
+        pointColor:"'green'",
+
+        scale:{
+          lineWidth:'pos/10',
+          lineSize:1,
+          color:"'white'",
+          lineOffset:1,
+
+        },
+
+        scaleOver:{
+          lineWidth:'pos/10',
+          lineSize:3,
+          color:"'red'",
+          lineOffset:0
+
+
+
+        },
+
+          scaleLimit:{
+          lineWidth:'pos/10',
+          lineSize:3,
+          color:"'orange'",
+          needleStart:-3,
+          needleEnd:2,
+          pointPos:5,
+          lineOffset:0
+
+
+        }
+        
+      }
+  
+  ]
+;
+
+
+var step=1;
+var sang;
+var cang;
+var m=4;
+var cnt=0;
+var active=0;
+var pos=0;
+
+function drawG()
+{
+  var limite2='';
+  var point2= '';
+  var valtext2 ='';
+  var lbltext2='';
+  var g = gauge[active];
+  var value= eval(g.value);
+  console.log(value);
+  var gr = "g1";
+  var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
+  var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
+  var scale = (g.scale) ? g.scale:g;                 
+  if(g.angle<=0)g.angle=180;
+  value = value/(g.max/g.divs);
+  var limit=0;
+  if(g.limit>0)limit= Math.floor(g.limit / (g.max/g.divs));
+  var i; 
+  step=g.angle/g.divs;
+  document.getElementById(gr).innerHTML="init";
+  pos=0;
+  var degree = (g.start)+90+(step*cnt);
+  var limitdegree = (g.start)+90+(step*limit);
+         i= g.start;
+         while (i<=(g.angle+g.start)) {
+           ang= i * Math.PI / 180;
+           sang=Math.cos(ang);
+           cang=Math.sin(ang);
+           sx=sang*(g.radius+g.lineSize)*m;
+           sy=cang*(g.radius+g.lineSize)*m; 
+           ex=sang*g.radius*m;
+           ey=cang*g.radius*m;
+           
+           if(pos<cnt){// medidor
+             
+             
+         
+              if(limit>0 && pos>limit){
+                
+                  sx=sang*(g.radius+scaleOver.lineSize+scaleOver.lineOffset)*m;
+                  sy=cang*(g.radius+scaleOver.lineSize+scaleOver.lineOffset)*m; 
+                  ex=sang*(g.radius+scaleOver.lineOffset)*m;
+                  ey=cang*(g.radius+scaleOver.lineOffset)*m;
+
+                 
+               addPath(gr,sx,sy,ex,ey,scaleOver);
+             }else{
+                addPath(gr,sx,sy,ex,ey,g);
+            }
+
+
+           }else
+           if(pos>cnt)// limite (orange) o escala (white)
+             {       
+               
+               
+               
+                      if(limit>0 && pos<limit) {//limite
+                        
+           sx=sang*(g.radius+scaleLimit.lineOffset+scaleLimit.lineSize)*m;
+           sy=cang*(g.radius+scaleLimit.lineOffset+scaleLimit.lineSize)*m; 
+           ex=sang*(g.radius+scaleLimit.lineOffset)*m;
+           ey=cang*(g.radius+scaleLimit.lineOffset)*m;    
+              addPath(gr,sx,sy,ex,ey,scaleLimit);
+                             
+                
+
+                      }
+                      else
+                      if(limit==0 || pos>limit){//escala o escalaover
+                           
+                        sx=sang*(g.radius+scale.lineSize+scale.lineOffset)*m;
+                        sy=cang*(g.radius+scale.lineSize+scale.lineOffset)*m; 
+                        ex=sang*(g.radius+scale.lineOffset)*m;
+                        ey=cang*(g.radius+scale.lineOffset)*m;         
+                        addPath(gr,sx,sy,ex,ey,scale);
+
+
+
+
+                      }
+             
+               
+               else{// scaleLmit needle
+                 
+                 if(limit>0)
+                   {
+                 lsx=sang*(g.radius+scaleLimit.lineSize+scaleLimit.needleStart)*m;
+                 lsy=cang*(g.radius+scaleLimit.lineSize+scaleLimit.needleStart)*m;
+                 lex=sang*(g.radius+scaleLimit.lineSize+scaleLimit.needleEnd)*m;
+                 ley=cang*(g.radius+scaleLimit.lineSize+scaleLimit.needleEnd)*m;
+            
+                   }
+
+ 
+
+               }
+
+             }
+           else
+             { //needle 
+               
+                sx=sang*(g.radius+g.lineSize+g.needleStart)*m;
+                 sy=cang*(g.radius+g.lineSize+g.needleStart)*m;
+                 ex=sang*(g.radius+g.lineSize+g.needleEnd)*m;
+                 ey=cang*(g.radius+g.lineSize+g.needleEnd)*m;
+                    addPath(gr,sx,sy,ex,ey,g);
+
+             }
+           
+   
+i+=step;
+  pos++;
+    
+     
+    }
+   
+ if(limit>0)
+   {
+addPath(gr,lsx,lsy,lex,ley,scaleLimit);
+       limite.style.display= "inherit";
+
+
+
+limite.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+scaleLimit.pointPos)*m}px) rotate(-${limitdegree}deg) `;
+
+   }else
+     {
+       limite.style.display= "none";
+     }
+ point.style.transform  = `rotate(${degree}deg) translateY(-${(g.radius+g.pointPos)*m}px) rotate(-${degree}deg) `;
+
+ 
+
+  
+  if(limit>0 && cnt>limit){
+    valtext.style.fill=eval(g.alertColor);
+  }else if(limit>0 && cnt==limit){
+    valtext.style.fill=eval(g.limitColor);
+  }else
+    {
+      valtext.style.fill=eval(g.color);
+    }
+  
+ 
+  
+  // ((value/(pos*cnt) *100)/10)
+  lbltext.textContent=eval(g.units);
+//    lbltext.textContent=value;
+  
+      if(cnt<value){
+        cnt++;
+        if(cnt>value){
+         setValueText(value);
+          return;
+        }
+      }else
+     if(cnt>value){
+        cnt--;
+        if(cnt<value){
+        setValueText(value);
+          return;
+        }
+      }
+    else {
+          setValueText(value);
+      return;
+    }
+
+  //setValueText(cnt+Math.random());
+  var rfrsh = 5;
+  if(g.refresh)rfrsh=g.refresh;
+      setTimeout(function(){
+      
+      drawG();
+      },rfrsh);
+    
+  
+  
+}
+
+
+function setValueText(v)
+{
+  var valueInt = v;
+ // var valueDec = ((v - valueInt)*10);
+  valtext.innerHTML= valueInt*10 ;
+
+}
+                
+
+
+
+
+function setGauge()  
+{
+  active=0;
+  gauge[active].value=487.9;
+  drawG();
+}
+
+setGauge();
+  </script>
+</body>
+ 
+</html>
