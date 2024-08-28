@@ -22,7 +22,7 @@ tspan{
 #gg{
   position:fixed;
   top:calc(25vh - 150px);
-  left:calc(20vw - 150px);
+  left:calc(18vw - 150px);
   width:300px;
   height:300px;
   background:#111;
@@ -39,7 +39,7 @@ tspan{
 #gg3{
   position:fixed;
   top:calc(25vh - 150px);
-  left:calc(80vw - 150px);
+  left:calc(82vw - 150px);
   width:300px;
   height:300px;
   background:#111;
@@ -206,7 +206,7 @@ document.getElementById(gr).appendChild(newpath);
 var gauge =[
       {
         ////////  KM/H  /////////
-        radius:30,//radio del medidor
+        radius:28,//radio del medidor
         angle:270,// angulo total del medidor
         start:155,// angulo de inicio del medidor
         divs:50,// divisiones
@@ -270,16 +270,18 @@ var cnt=0;
 var active=0;
 var pos=0;
 
+var limiteq=0;
+ var pointq= 0;
+  var valtextq =0;
+  var lbltextq=0;
+  var gr=0;
 function drawG()
 {
-  var limite2='';
-  var point2= '';
-  var valtext2 ='';
-  var lbltext2='';
+
   var g = gauge[active];
   var value= eval(g.value);
   console.log(value);
-  var gr = "g1";
+ // var gr = "g1";
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
   var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
   var scale = (g.scale) ? g.scale:g;                 
@@ -390,34 +392,34 @@ i+=step;
  if(limit>0)
    {
 addPath(gr,lsx,lsy,lex,ley,scaleLimit);
-       limite.style.display= "inherit";
+       limiteq.style.display= "inherit";
 
 
 
-limite.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+scaleLimit.pointPos)*m}px) rotate(-${limitdegree}deg) `;
+limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+scaleLimit.pointPos)*m}px) rotate(-${limitdegree}deg) `;
 
    }else
      {
-       limite.style.display= "none";
+       limiteq.style.display= "none";
      }
- point.style.transform  = `rotate(${degree}deg) translateY(-${(g.radius+g.pointPos)*m}px) rotate(-${degree}deg) `;
+ pointq.style.transform  = `rotate(${degree}deg) translateY(-${(g.radius+g.pointPos)*m}px) rotate(-${degree}deg) `;
 
  
 
   
   if(limit>0 && cnt>limit){
-    valtext.style.fill=eval(g.alertColor);
+    valtextq.style.fill=eval(g.alertColor);
   }else if(limit>0 && cnt==limit){
-    valtext.style.fill=eval(g.limitColor);
+    valtextq.style.fill=eval(g.limitColor);
   }else
     {
-      valtext.style.fill=eval(g.color);
+      valtextq.style.fill=eval(g.color);
     }
   
  
   
   // ((value/(pos*cnt) *100)/10)
-  lbltext.textContent=eval(g.units);
+  lbltextq.textContent=eval(g.units);
 //    lbltext.textContent=value;
   
       if(cnt<value){
@@ -456,22 +458,50 @@ function setValueText(v)
 {
   var valueInt = v;
  // var valueDec = ((v - valueInt)*10);
-  valtext.innerHTML= valueInt*10 ;
+  valtextq.innerHTML= valueInt*10 ;
 
 }
                 
 
 
 
+function setGauge() {
 
-function setGauge()  
-{
-  active=0;
-  gauge[active].value=387.9;
-  drawG();
+  var limiteAr = ['limite', 'limite2', 'limite3'];
+  var pointAr = ['point', 'point2', 'point3'];
+  var valtextAr = ['valtext', 'valtext2', 'valtext3'];
+  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3'];
+  var gAr = ['g1', 'g1-2', 'g1-3'];
+  
+  for (var i = 0; i < 3; i++) {  
+     active=0;
+     gauge[active].value=387.9;
+     limiteq = document.getElementById(limiteAr[i]);
+     pointq = document.getElementById(pointAr[i]);
+     valtextq = document.getElementById(valtextAr[i]);
+     lbltextq =  document.getElementById(lbltextAr[i]);
+     gr = gAr[i];
+
+   
+    drawG(); 
+  }
+ 
+  /*  active=0;
+    gauge[active].value=387.9;
+     limiteq = document.getElementById(limiteAr[0]);
+     pointq = document.getElementById(pointAr[0]);
+     valtextq = document.getElementById(valtextAr[0]);
+     lbltextq =  document.getElementById(lbltextAr[0]);
+     gr = gAr[0];
+    drawG(); */
 }
 
 setGauge();
+
+
+
+
+
   </script>
 </body>
  
