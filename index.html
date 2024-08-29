@@ -36,7 +36,7 @@ tspan{
   padding-bottom: 20px;
 }
 
-#gg,#gg4{
+#gg,#gg4,#gg7{
   
 
   margin-left: 0;
@@ -80,7 +80,7 @@ tspan{
   stroke-width:2em; 
 }
 
-#point,#point2,#point3,#point4,#point5,#point6{
+#point,#point2,#point3,#point4,#point5,#point6,#point7{
   fill:cyan;
   r: .25em;
 
@@ -90,7 +90,7 @@ tspan{
 #limite2,
 #limite3,#limite4,
 #limite5,
-#limite6{
+#limite6,#limite7{
   fill:orange;
   r: .25em;
 
@@ -110,7 +110,7 @@ tspan{
  /*transition:  all 1s cubic-bezier(0.01,0.02,0.4,  1);
  */
 }
-#valtext,#valtext2,#valtext3,#valtext4,#valtext5,#valtext6{
+#valtext,#valtext2,#valtext3,#valtext4,#valtext5,#valtext6,#valtext7{
 
   font-size:2.5em;
   font-weight:200;
@@ -118,7 +118,7 @@ tspan{
 }
 
 
-#lbltext,#lbltext3,#lbltext2,#lbltext4,#lbltext5,#lbltext6{
+#lbltext,#lbltext3,#lbltext2,#lbltext4,#lbltext5,#lbltext6,#lbltext7{
   font-family:'Lato';
   font-size:2em;
   font-weight:300;
@@ -233,7 +233,22 @@ tspan{
   <p style="color: wheat; margin-top:31%;right:45%; position: absolute;">Phase 03</p>
 
 </div>
+<br>  <small style=" font-size: 1.8em; padding: 10px;">Power()</small>
 
+<div id="box1">
+<div id="gauge7" class="gauge-container">
+  <svg id="gg7">
+    <g id="g1-7"></g>
+    <g id="g7-7">
+      <text id="valtext7" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+      <text id="lbltext7" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+      <circle id="limite7" cx="50%" cy="50%" />
+      <circle id="point7" cx="50%" cy="50%" />
+      <text id="limitText7" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+    </g>
+  </svg>
+</div>
+</div>
   <script>
    
 function  addPath(gr,sx,sy,ex,ey,g)
@@ -564,7 +579,7 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
         drawG(value, active, limite, point, valtext, lbltext, grq);
       console.log('valueInt55-- ',g.refresh );
       },rfrsh);
-     // drawG(value, active, limite, point, valtext, lbltext, grq);
+    //  drawG(value, active, limite, point, valtext, lbltext, grq);
       
   
  function setValueText(v)
@@ -579,14 +594,14 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
 }
 
 function setGauge() {
-  var limiteAr = ['limite', 'limite2', 'limite3','limite4', 'limite5', 'limite6'];
-  var pointAr = ['point', 'point2', 'point3','point4', 'point5', 'point6'];
-  var valtextAr = ['valtext', 'valtext2', 'valtext3','valtext4', 'valtext5', 'valtext6'];
-  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3','lbltext4', 'lbltext5', 'lbltext6'];
-  var gAr = ['g1', 'g1-2', 'g1-3','g1-4', 'g1-5', 'g1-6'];
-  var valueAr=[200,230,450,100,345,400];
+  var limiteAr = ['limite', 'limite2', 'limite3','limite4', 'limite5', 'limite6','limite7'];
+  var pointAr = ['point', 'point2', 'point3','point4', 'point5', 'point6','point7'];
+  var valtextAr = ['valtext', 'valtext2', 'valtext3','valtext4', 'valtext5', 'valtext6','valtext7'];
+  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3','lbltext4', 'lbltext5', 'lbltext6','lbltext7'];
+  var gAr = ['g1', 'g1-2', 'g1-3','g1-4', 'g1-5', 'g1-6', 'g1-7'];
+  var valueAr=[200,230,450,100,345,400,450];
 
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < 7; i++) {
     if (i < 3)
     { var active = 0;}
     else{ var active = 1;}
