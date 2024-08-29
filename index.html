@@ -312,7 +312,7 @@ var gauge =[
         value:500,// valor inicial
         limit:0,// valor del limite (escala secundaria)
         min:0,// valor mínimo del medidor
-        max:600,// valor máximo (fondo de escala) 
+        max:500,// valor máximo (fondo de escala) 
         color:"'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'",// color del medidor(eval);
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'yellow'",// color del medidor(eval);
@@ -368,15 +368,17 @@ var valuePrint=0;
  // var valtextq =0;
 function drawG(value, active, limite, point, valtext, lbltext, grq)
 {
+  gauge[active].value = 300 + Math.random() * 200;
+
   var limiteq=limite;
   var pointq= point;
   var valtextq =valtext;
   var lbltextq=lbltext;
   var gr=0;
   var g = gauge[active];
-  var value= eval(g.value);
+  var value= g.value;
   var valuePrint=value;
-  console.log(value);
+  console.log('my',value);
   var gr = grq;
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
   var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
@@ -541,7 +543,7 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
     }
 
   //setValueText(cnt+Math.random());
-  var rfrsh = 100;
+  var rfrsh = 1;
   if(g.refresh)rfrsh=g.refresh;
       setTimeout(function(){
       
@@ -611,8 +613,9 @@ function setGauge() {
     { var active = 0;}
     else{ var active = 1;}
    
-    var value = 87.9;
 
+    value= 100;
+   // gauge[active].value=100 +Math.random()*1000;
     var limite = document.getElementById(limiteAr[i]);
     var point = document.getElementById(pointAr[i]);
     var valtext = document.getElementById(valtextAr[i]);
