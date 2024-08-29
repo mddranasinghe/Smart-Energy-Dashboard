@@ -9,40 +9,60 @@
 
 body{
   font-size:26px;
-  color:cyan;
-  
-  background:white;
-}
 
+  font-family: 'Avenir', sans-serif;
+  background:white;
+  width: 98%;
+  margin: 0 auto;
+}
+h1{text-align: center;}
 tspan{
   font-size:.4em;
  }
 
-
-#gg{
-  position:fixed;
-  top:calc(25vh - 150px);
-  left:calc(18vw - 150px);
-  width:300px;
-  height:300px;
-  background:white;
-}
-#gg2{
-  position:fixed;
-  top:calc(25vh - 150px);
-  left:calc(50vw - 150px);
-  width:300px;
-  height:300px;
-  background:white;
+#box1,#box2
+{
+  margin: 0 auto;
+   position: relative;
+   background-color:#313946; 
+   width:98% ;
+   height:300px;
+   display: flex;
+   justify-content: space-between;
+  
+  box-shadow: 2px 7px 50px 0px #313946;
+  border-radius: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-#gg3{
-  position:fixed;
-  top:calc(25vh - 150px);
-  left:calc(82vw - 150px);
+#gg,#gg4{
+  
+
+  margin-left: 0;
   width:300px;
   height:300px;
-  background:white;
+  
+
+}
+#gg2,#gg5{
+
+  
+
+  width:300px;
+  height:300px;
+
+  text-align: center; 
+}
+
+#gg3,#gg6{
+ 
+   
+
+ margin-right:0%;
+  width:300px;
+  height:300px;
+ 
 }
 
 .dial{
@@ -60,17 +80,19 @@ tspan{
   stroke-width:2em; 
 }
 
-#point,#point2,#point3{
-  fill:#018FFB;
- r: .25em;
+#point,#point2,#point3,#point4,#point5,#point6{
+  fill:cyan;
+  r: .25em;
 
 }
 
 #limite,
 #limite2,
-#limite3{
+#limite3,#limite4,
+#limite5,
+#limite6{
   fill:orange;
- r: .25em;
+  r: .25em;
 
 }
 
@@ -88,16 +110,15 @@ tspan{
  /*transition:  all 1s cubic-bezier(0.01,0.02,0.4,  1);
  */
 }
-#valtext,#valtext2,#valtext3{
-  font-family:'Lato';
+#valtext,#valtext2,#valtext3,#valtext4,#valtext5,#valtext6{
+
   font-size:2.5em;
-  font-weight:300;
+  font-weight:200;
   fill:white;
 }
 
 
-#lbltext,
-#lbltext3,#lbltext2{
+#lbltext,#lbltext3,#lbltext2,#lbltext4,#lbltext5,#lbltext6{
   font-family:'Lato';
   font-size:2em;
   font-weight:300;
@@ -108,13 +129,13 @@ tspan{
 
 
 
-
-
   </style>
 </head>
  
 <body>
-
+  <h1> Smart Energy Dashboard</h1>
+  <small style=" font-size: 1.8em; padding: 10px;">Voltage(W)</small>
+<div id='box1'>
   <svg id="gg">
   <g id="g1"></g>
     <g id="g2">
@@ -126,7 +147,7 @@ tspan{
     
   <circle id ="point" class="" cx="50%" cy="50%" />
     <text id="limitText" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
-  
+    
     </g>  
   </svg>
   
@@ -156,7 +177,51 @@ tspan{
       </g>
     </svg>
   </div>
+</div><br>
+<small style=" font-size: 1.8em; padding: 10px; top: 50px;" >Currunt</small>
+<div id='box2'>
+  <svg id="gg4">
+  <g id="g1-4"></g>
+    <g id="g4-4">
+       <text id="valtext4" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+      
+     <text id="lbltext4" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+    <circle id ="limite4" cx="50%" cy="50%" />
+  
+    
+  <circle id ="point4" class="" cx="50%" cy="50%" />
+    <text id="limitText4" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+  
+    </g>  
+  </svg>
+  
+  <div id="gauge5" class="gauge-container">
+    <svg id="gg5">
+      <g id="g1-5"></g>
+      <g id="g5-5">
+        <text id="valtext5" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+        <text id="lbltext5" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+        <circle id="limite5" cx="50%" cy="50%" />
+        <circle id="point5" cx="50%" cy="50%" />
+        <text id="limitText5" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+      </g>
+    </svg>
+  </div>
 
+
+  <div id="gauge6" class="gauge-container">
+    <svg id="gg6">
+      <g id="g1-6"></g>
+      <g id="g6-6">
+        <text id="valtext6" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
+        <text id="lbltext6" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+        <circle id="limite6" cx="50%" cy="50%" />
+        <circle id="point6" cx="50%" cy="50%" />
+        <text id="limitText6" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+      </g>
+    </svg>
+  </div>
+</div>
 
   <script>
    
@@ -187,15 +252,15 @@ document.getElementById(gr).appendChild(newpath);
 var gauge =[
       {
         ////////  KM/H  /////////
-        radius:28,//radio del medidor
+        radius:26.5,//radio del medidor
         angle:270,// angulo total del medidor
         start:155,// angulo de inicio del medidor
         divs:50,// divisiones
-        value:387.09,// valor inicial
-        limit:450,// valor del limite (escala secundaria)
+        value:467.09,// valor inicial
+        limit:350,// valor del limite (escala secundaria)
         min:0,// valor mínimo del medidor
         max:500,// valor máximo (fondo de escala) 
-        color:"'#018FFB'",// color del medidor(eval);"'cyan'"
+        color:"'cyan'",// color del medidor(eval);"'cyan'"
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'orange'",// color del medidor(eval);
         units:"'W'",// leyenda abajo del valor (eval)
@@ -205,6 +270,7 @@ var gauge =[
         needleStart:0,
         needleEnd:-7,
         pointPos: -4,
+        refresh:100,
         pointColor:"'green'",
 
         scale:{
@@ -237,7 +303,50 @@ var gauge =[
 
         }
         
-      }
+      },
+      {  ///// TEMP ////
+        radius:28,//radio del medidor
+        angle:360,// angulo total del medidor
+        start:270,// angulo de inicio del medidor
+        divs:50,// divisiones
+        value:500,// valor inicial
+        limit:0,// valor del limite (escala secundaria)
+        min:0,// valor mínimo del medidor
+        max:600,// valor máximo (fondo de escala) 
+        color:"'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'",// color del medidor(eval);
+        alertColor:"'red'",// color del medidor(eval);
+        limitColor:"'yellow'",// color del medidor(eval);
+        units:"'A'",// leyenda abajo del valor (eval)
+        lineWidth:6,// ancho del segmento
+        lineSize:4,// largo del segmento
+        lineOffset:0,
+        needleStart:0,
+        needleEnd:-4,
+        pointPos: -3,
+        pointColor:"'magenta'",
+        refresh:100,
+        scale:{
+          lineWidth:1,
+          lineSize:1,
+          color:"'white'",
+          lineOffset:1,
+
+        },
+
+          scaleLimit:{
+          lineWidth:3,
+          lineSize:3,
+          color:"'orange'",
+          needleStart:-3,
+          needleEnd:2,
+          pointPos:5,
+          lineOffset:0
+
+
+        }
+        
+      },      
+  
   
   ]
 ;
@@ -250,7 +359,7 @@ var m=4;
 var cnt=0;
 var active=0;
 var pos=0;
-
+var valuePrint=0;
 /*var limiteq=0;
  var pointq= 0;
   var valtextq =0;
@@ -266,6 +375,7 @@ function drawG(value, active, limite, point, valtext, lbltext, grq)
   var gr=0;
   var g = gauge[active];
   var value= eval(g.value);
+  var valuePrint=value;
   console.log(value);
   var gr = grq;
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
@@ -411,24 +521,27 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
       if(cnt<value){
         cnt++;
         if(cnt>value){
-         setValueText(value);
+         setValueText(valuePrint);
+         //console.log('valueInt ',value );
           return;
         }
       }else
      if(cnt>value){
         cnt--;
         if(cnt<value){
-        setValueText(value);
+        setValueText(valuePrint);
+       // console.log('valueInt ',value );
           return;
         }
       }
     else {
-          setValueText(value);
+          setValueText(valuePrint);
+          //console.log('valueInt ',value );
       return;
     }
 
   //setValueText(cnt+Math.random());
-  var rfrsh = 5;
+  var rfrsh = 100;
   if(g.refresh)rfrsh=g.refresh;
       setTimeout(function(){
       
@@ -436,13 +549,15 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
       },rfrsh);
     
   
-      function setValueText(v)
+ function setValueText(v)
 {
-  var valueInt = v;
- // var valueDec = ((v - valueInt)*10);
-  valtextq.innerHTML= valueInt*10 ;
+  var valueInt =  Math.trunc(v);
+ 
+ // var valueDec = Math.trunc((v - valueInt)*10);
+  valtext.innerHTML= valueInt ;
 
 }
+
 }
 
 
@@ -485,15 +600,18 @@ function setGauge() {
 setGauge();*/
 
 function setGauge() {
-  var limiteAr = ['limite', 'limite2', 'limite3'];
-  var pointAr = ['point', 'point2', 'point3'];
-  var valtextAr = ['valtext', 'valtext2', 'valtext3'];
-  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3'];
-  var gAr = ['g1', 'g1-2', 'g1-3'];
+  var limiteAr = ['limite', 'limite2', 'limite3','limite4', 'limite5', 'limite6'];
+  var pointAr = ['point', 'point2', 'point3','point4', 'point5', 'point6'];
+  var valtextAr = ['valtext', 'valtext2', 'valtext3','valtext4', 'valtext5', 'valtext6'];
+  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3','lbltext4', 'lbltext5', 'lbltext6'];
+  var gAr = ['g1', 'g1-2', 'g1-3','g1-4', 'g1-5', 'g1-6'];
 
-  for (var i = 0; i < 3; i++) {
-    var active = 0;
-    var value = 387.9;
+  for (var i = 0; i < 6; i++) {
+    if (i < 3)
+    { var active = 0;}
+    else{ var active = 1;}
+   
+    var value = 87.9;
 
     var limite = document.getElementById(limiteAr[i]);
     var point = document.getElementById(pointAr[i]);
@@ -507,6 +625,28 @@ function setGauge() {
 
 setGauge();
 
+/*function setGauge2() {
+  var limiteAr = ['limite4', 'limite5', 'limite6'];
+  var pointAr = ['point4', 'point5', 'point6'];
+  var valtextAr = ['valtext4', 'valtext5', 'valtext6'];
+  var lbltextAr = ['lbltext4', 'lbltext5', 'lbltext6'];
+  var gAr = ['g1-4', 'g1-5', 'g1-6'];
+
+  for (var i = 3; i < 4; i++) {
+    var active = 1;
+    var value = 90;
+
+    var limite = document.getElementById(limiteAr[i]);
+    var point = document.getElementById(pointAr[i]);
+    var valtext = document.getElementById(valtextAr[i]);
+    var lbltext = document.getElementById(lbltextAr[i]);
+    var grq = gAr[i];
+
+    drawG(value, active, limite, point, valtext, lbltext, grq);
+  }
+}
+
+setGauge2();*/
 
 
 
