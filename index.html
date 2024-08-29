@@ -26,7 +26,7 @@ tspan{
    position: relative;
    background-color:#313946; 
    width:98% ;
-   height:300px;
+   height:325px;
    display: flex;
    justify-content: space-between;
   
@@ -132,7 +132,7 @@ tspan{
   </style>
 </head>
  
-<body>
+<div>
   <h1> Smart Energy Dashboard</h1>
   <small style=" font-size: 1.8em; padding: 10px;">Voltage(W)</small>
 <div id='box1'>
@@ -149,8 +149,9 @@ tspan{
     <text id="limitText" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
     
     </g>  
-  </svg>
   
+  </svg>
+ 
   <div id="gauge2" class="gauge-container">
     <svg id="gg2">
       <g id="g1-2"></g>
@@ -177,8 +178,13 @@ tspan{
       </g>
     </svg>
   </div>
+  <p style="color: wheat; margin-top:30%;left:10%; position: absolute;">Phase 01</p>
+  <p style="color: wheat; margin-top:30%;right:10%; position: absolute;">Phase 02</p>
+  <p style="color: wheat; margin-top:30%;right:46%; position: absolute;">Phase 03</p>
+
 </div><br>
 <small style=" font-size: 1.8em; padding: 10px; top: 50px;" >Currunt</small>
+</div>
 <div id='box2'>
   <svg id="gg4">
   <g id="g1-4"></g>
@@ -221,6 +227,11 @@ tspan{
       </g>
     </svg>
   </div>
+
+  <p style="color: wheat; margin-top:31%;left:10%; position: absolute;">Phase 01</p>
+  <p style="color: wheat; margin-top:31%;right:10%; position: absolute;">Phase 02</p>
+  <p style="color: wheat; margin-top:31%;right:45%; position: absolute;">Phase 03</p>
+
 </div>
 
   <script>
@@ -270,7 +281,7 @@ var gauge =[
         needleStart:0,
         needleEnd:-7,
         pointPos: -4,
-        refresh:100,
+        refresh:10,
         pointColor:"'green'",
 
         scale:{
@@ -350,8 +361,6 @@ var gauge =[
   
   ]
 ;
-
-
 var step=1;
 var sang;
 var cang;
@@ -366,9 +375,9 @@ var valuePrint=0;
   var lbltextq=0;
   var gr=0;*/
  // var valtextq =0;
-function drawG(value, active, limite, point, valtext, lbltext, grq)
+function drawG(value1, active, limite, point, valtext, lbltext, grq)
 {
-  gauge[active].value = 300 + Math.random() * 200;
+  
 
   var limiteq=limite;
   var pointq= point;
@@ -376,13 +385,16 @@ function drawG(value, active, limite, point, valtext, lbltext, grq)
   var lbltextq=lbltext;
   var gr=0;
   var g = gauge[active];
-  var value= g.value;
+  var value= eval(g.value);
   var valuePrint=value;
   console.log('my',value);
   var gr = grq;
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
   var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
-  var scale = (g.scale) ? g.scale:g;                 
+  var scale = (g.scale) ? g.scale:g;  
+  
+  
+
   if(g.angle<=0)g.angle=180;
   value = value/(g.max/g.divs);
   var limit=0;
@@ -520,11 +532,11 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
   lbltextq.textContent=eval(g.units);
 //    lbltext.textContent=value;
   
-      if(cnt<value){
+    if(cnt<value){
         cnt++;
         if(cnt>value){
          setValueText(valuePrint);
-         //console.log('valueInt ',value );
+        // console.log('valueInt-- ',cnt );
           return;
         }
       }else
@@ -532,24 +544,28 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
         cnt--;
         if(cnt<value){
         setValueText(valuePrint);
-       // console.log('valueInt ',value );
+       //console.log('valueInt-- ',value );
           return;
         }
       }
     else {
           setValueText(valuePrint);
-          //console.log('valueInt ',value );
+    //    console.log('valueInt-- ',value );
       return;
     }
 
+
+
   //setValueText(cnt+Math.random());
-  var rfrsh = 1;
+  var rfrsh = 10;
   if(g.refresh)rfrsh=g.refresh;
       setTimeout(function(){
       
-      drawG(value, active, limite, point, valtext, lbltext, grq);
+        drawG(value, active, limite, point, valtext, lbltext, grq);
+      console.log('valueInt55-- ',g.refresh );
       },rfrsh);
-    
+     // drawG(value, active, limite, point, valtext, lbltext, grq);
+      
   
  function setValueText(v)
 {
@@ -562,94 +578,74 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
 
 }
 
-
-
-                
-
-
-/*
-function setGauge() {
-
-  var limiteAr = ['limite', 'limite2', 'limite3'];
-  var pointAr = ['point', 'point2', 'point3'];
-  var valtextAr = ['valtext', 'valtext2', 'valtext3'];
-  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3'];
-  var gAr = ['g1', 'g1-2', 'g1-3'];
-  
-  for (var i = 0; i < 3; i++) {  
-     active=0;
-     gauge[active].value=387.9;
-     limiteq = document.getElementById(limiteAr[i]);
-     pointq = document.getElementById(pointAr[i]);
-     valtextq = document.getElementById(valtextAr[i]);
-     lbltextq =  document.getElementById(lbltextAr[i]);
-     gr = gAr[i];
-
-   
-    drawG(limiteq, pointq, valtextq, lbltextq, gr); 
-  }
- 
-  /*  active=0;
-    gauge[active].value=387.9;
-     limiteq = document.getElementById(limiteAr[0]);
-     pointq = document.getElementById(pointAr[0]);
-     valtextq = document.getElementById(valtextAr[0]);
-     lbltextq =  document.getElementById(lbltextAr[0]);
-     gr = gAr[0];
-    drawG(); *//*
-}
-
-setGauge();*/
-
 function setGauge() {
   var limiteAr = ['limite', 'limite2', 'limite3','limite4', 'limite5', 'limite6'];
   var pointAr = ['point', 'point2', 'point3','point4', 'point5', 'point6'];
   var valtextAr = ['valtext', 'valtext2', 'valtext3','valtext4', 'valtext5', 'valtext6'];
   var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3','lbltext4', 'lbltext5', 'lbltext6'];
   var gAr = ['g1', 'g1-2', 'g1-3','g1-4', 'g1-5', 'g1-6'];
+  var valueAr=[200,230,450,100,345,400];
 
   for (var i = 0; i < 6; i++) {
     if (i < 3)
     { var active = 0;}
     else{ var active = 1;}
-   
+  //  var active = 0;
+    gauge[active].value=valueAr[i];
+    gauge[active].value = 300 + Math.random() * 200;
 
-    value= 100;
-   // gauge[active].value=100 +Math.random()*1000;
     var limite = document.getElementById(limiteAr[i]);
     var point = document.getElementById(pointAr[i]);
     var valtext = document.getElementById(valtextAr[i]);
     var lbltext = document.getElementById(lbltextAr[i]);
     var grq = gAr[i];
+    var valuepass=valueAr[i];
 
-    drawG(value, active, limite, point, valtext, lbltext, grq);
+    drawG(valuepass, active, limite, point, valtext, lbltext, grq);
   }
 }
+
+
+/*function setGauge() {
+  var limiteAr = ['limite', 'limite2', 'limite3', 'limite4', 'limite5', 'limite6'];
+  var pointAr = ['point', 'point2', 'point3', 'point4', 'point5', 'point6'];
+  var valtextAr = ['valtext', 'valtext2', 'valtext3', 'valtext4', 'valtext5', 'valtext6'];
+  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3', 'lbltext4', 'lbltext5', 'lbltext6'];
+  var gAr = ['g1', 'g1-2', 'g1-3', 'g1-4', 'g1-5', 'g1-6'];
+  var valueAr = [300, 233, 450, 500, 345, 400];
+
+  let index = 0; // Start with the first gauge
+
+  // Function to draw each gauge one by one
+  function drawNextGauge() {
+    if (index >= 6) return; // Stop when all gauges are drawn
+
+    // Determine which gauge object to use based on index
+    var active = index < 3 ? 0 : 1;
+
+    // Get the elements and values for the current gauge
+    var limite = document.getElementById(limiteAr[index]);
+    var point = document.getElementById(pointAr[index]);
+    var valtext = document.getElementById(valtextAr[index]);
+    var lbltext = document.getElementById(lbltextAr[index]);
+    var grq = gAr[index];
+    var valuepass = valueAr[index];
+
+    // Draw the current gauge and increment index
+    drawG(valuepass, active, limite, point, valtext, lbltext, grq);
+
+    // Increment the index and schedule the next gauge draw after the current one completes
+    index++;
+    setTimeout(drawNextGauge, 10); // Adjust timeout to ensure previous draw is complete
+  }
+
+  drawNextGauge(); // Start drawing gauges
+}
+
+//setGauge();*/
 
 setGauge();
 
-/*function setGauge2() {
-  var limiteAr = ['limite4', 'limite5', 'limite6'];
-  var pointAr = ['point4', 'point5', 'point6'];
-  var valtextAr = ['valtext4', 'valtext5', 'valtext6'];
-  var lbltextAr = ['lbltext4', 'lbltext5', 'lbltext6'];
-  var gAr = ['g1-4', 'g1-5', 'g1-6'];
-
-  for (var i = 3; i < 4; i++) {
-    var active = 1;
-    var value = 90;
-
-    var limite = document.getElementById(limiteAr[i]);
-    var point = document.getElementById(pointAr[i]);
-    var valtext = document.getElementById(valtextAr[i]);
-    var lbltext = document.getElementById(lbltextAr[i]);
-    var grq = gAr[i];
-
-    drawG(value, active, limite, point, valtext, lbltext, grq);
-  }
-}
-
-setGauge2();*/
 
 
 
