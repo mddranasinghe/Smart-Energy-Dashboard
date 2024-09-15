@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title></title>
+  <script src="../resources\js\apexcharts.min.js"></script>
   <style>
 	
 
@@ -20,48 +21,75 @@ tspan{
   font-size:.4em;
  }
 
-#box1,#box2
+#box1
 {
   margin: 0 auto;
    position: relative;
    background-color:#313946; 
-   width:98% ;
-   height:325px;
+   width:100% ;
+   height:390px;
    display: flex;
    justify-content: space-between;
   
-  box-shadow: 2px 7px 50px 0px #313946;
+  border-radius: 5px;
+  padding-top: 30px;
+  padding-bottom: 40px;
+}
+#box3
+{
+   margin-left: 0%;
+   position: relative;
+   background-color:#313946; 
+   width:100% ;
+   height:500px;
+   display: flex;
+   justify-content: space-between;
+   border-radius: 5px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+   margin-top: 30px;
+}
+#box2
+{
+  margin: 0 auto;
+   position: relative;
+   background-color:#313946; 
+   width:92% ;
+   height:725px;
+   display: flex;
+   justify-content: space-between;
+
+  
   border-radius: 5px;
   padding-top: 20px;
   padding-bottom: 20px;
 }
-
 #gg_0,#ggphs_0,#gg7{
   
-
+margin-top: 50px;
   margin-left: 0;
-  width:300px;
+  width:300px; 
   height:300px;
-  
+  background-color:blac;
 
 }
 #gg_1,#ggphs_1{
-
-  
-
+  margin-top: 50px;
   width:300px;
   height:300px;
 
   text-align: center; 
+  background-color:blac;
 }
 
 #gg_2,#ggphs_2{
  
    
-
+  margin-top: 50px;
  margin-right:0%;
   width:300px;
   height:300px;
+  background-color:blac;
  
 }
 
@@ -129,18 +157,37 @@ tspan{
 
 .popup {
     width: 100%;
-  display: none; 
+  display: non; 
   position: fixed;
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%); 
   border-radius: 10px 10px;
-
   padding: 12px 12px 12px 12px;
   z-index: 9999; 
   color: white;
 }
+.namebox2{ 
+  flex: 1; 
+ text-align: center;
+ color:white;
+ padding: 15px;
+ font-size: 35px;
 
+ border: 1px solid gray;
+
+
+}
+.namebox_main2{
+
+  bottom: 320px;
+  width: 92%;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end;
+
+
+  }
 #overlay {
   position: fixed;
   display: none;
@@ -154,30 +201,264 @@ tspan{
   z-index: 9998;
   cursor: pointer;
 }
+.namebox{ flex: 1; 
+ 
+   padding: 5px;
+   text-align: center;
+   color:white;
+   padding: 20px;
+   font-size: 35px;
+  
+}
+.namebox_main{
+  position: absolute; 
+  bottom: 5px;
+  width: 100%;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end;
 
-  </style>
+
+  }
+
+  #top_box_main{
+
+    position: absolute;
+     top: 0;
+      width: 100%;
+        justify-content: space-between;
+         align-items: flex-end;
+       
+          border: 1px solid gray;
+  
+            color:rgb(255, 255, 255) ;
+        
+            
+        
+  }
+  .top_box{
+
+    padding: 5px;
+   text-align: right;
+   color:white;
+   padding: 20px;
+   font-size: 35px;
+   font-size: 25px;
+  
+  }
+</style>
 </head>
 <div>
   <h1> Smart Energy Dashboard</h1>
-  <small style=" font-size: 1.8em; padding: 10px;">Voltage(W)</small>
-  <div id='box1'></div>
+ 
+  <div id='box1'>
+    <div id="top_box_main" ><div class="top_box">01H :30M :45S</div></div>
 
+    <div class="namebox_main">
+      <div class="namebox" >Voltage </div>
+      <div class="namebox">Current  </div>
+      <div class="namebox" >Power</div>
+    </div>
+    
+    
+    
+  </div>
+  <div id='box3'>
+    <div id="top_box_main" ><div class="top_box">Import & Export Active Power</div></div>
+    <div id="c" style="width: 95%; position: absolute; top:100px; " ></div>
+
+   
+    </div>
+
+
+
+
+
+  
   <div id="popup" class="popup"  style="display:none;">
-  <div id='box2'></div>
+  <div id='box2'>
+    
+  </div>
+  <div class="namebox_main2">
+    <div class="namebox2" >Phase 01 </div>
+    <div class="namebox2">Phase 02  </div>
+    <div class="namebox2" >Phase 03</div>
+  </div>
+  
+  
 </div>
 </div>
+
 <div id="overlay"></div>
   <script>
+
+/*var options = {
+          series: [{
+          data: [4004]
+        }, {
+          data: [503]
+        }],
+          chart: {
+          type: 'bar',
+          height: 430
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            dataLabels: {
+              position: 'top',
+            },
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (value, opts) {
+            return value + " W"
+  },
+          offsetX: 120,
+          style: {
+            fontSize: '30px',
+            colors: ['#fff']
+          }
+        },
+        stroke: {
+          show: true,
+          width: 1,
+          colors: ['#fff']
+        },
+        tooltip: {
+          shared: true,
+          intersect: false
+        },
+        xaxis: {
+          categories: [2001],
+          labels: {
+            show: true,
+            style: {
+            fontSize:'40px',
+            colors: ['white'],
+                      },
+            
+          offsetY: 15,
+          },
+
+          offsetY: 0,
+        },
+        yaxis: {
+          labels: {
+            show: false,
+            style: {
+            fontSize:'30px'},
+          },
+
+
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#c"), options);
+        chart.render();*/
+        var options = {
+          series: [{
+          data: [4000, 3000]
+        }],
+          chart: {
+          type: 'bar',
+          height: 320
+        },
+        plotOptions: {
+          bar: {
+            barHeight: '70%',
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: 'bottom'
+            },
+          }
+        },
+        colors: ['#33b2df', '#FEB018'
+        ],
+        dataLabels: {
+          enabled: true,
+          textAnchor: 'start',
+          style: {
+            fontSize: '25px',
+            colors: ['#fff']
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val +' W'
+          },
+          offsetX: 0,
+          dropShadow: {
+            enabled: true
+          }
+        },
+        stroke: {
+          width: 1,
+          colors: ['#fff']
+        },
+        xaxis: {
+          categories: ['Import', 'Export'
+          ],
+          labels: {
+            show: true,
+            style: {
+            fontSize:'40px',
+            colors: ['white'],
+                      },
+            
+          offsetY: 15,
+          },
+         
+
+
+
+        },
+
+
+
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        title: {
+            text: 'Custom DataLabels',
+            align: 'center',
+            floating: true
+        },
+        subtitle: {
+            text: 'Category Names as DataLabels inside bars',
+            align: 'center',
+        },
+        tooltip: {
+          theme: 'dark',
+          x: {
+            show: false
+          },
+          y: {
+            title: {
+              formatter: function () {
+                return ''
+              }
+            }
+          }
+        }
+        
+        };
+
+        var chart = new ApexCharts(document.querySelector("#c"), options);
+        chart.render();
+      
 var payload=[
    {		
   "ts": [253961],		
   "id": [1],		
-  "volt": [229.92,231.29,225.95],		
-  "curr": [4.42,5.07, 21.53],		
-  "curr_sum": [31.02],		
-  "pow": [975.44,1161.38,4835.45],		
-  "pow_tot": [6972.27],		
-  "v_am": [995.44, 1165.54,4845.08],		
+  "volt": [229.92,231.29,225.95],		//
+  "curr": [4.42,5.07, 21.53],		//
+  "curr_sum": [31.02],		//
+  "pow": [975.44,1161.38,4835.45],		//
+  "pow_tot": [6972.27],		//
+  "v_am": [995.44,1165.54,4845.08],		
   "v_am_tot": [6998.27],		
   "v_am_re": [-198.62,-98.78,305.31],		
   "v_am_re_tot": [0.00],		
@@ -185,7 +466,7 @@ var payload=[
   "pf_tot": [1.00],		
   "pa": [-8.46, -3.89, 4.67],		
   "pa_tot": [-2.56],		
-  "volt_avg": [229.08],		
+  "volt_avg": [229.08],	//	
   "curr_avg": [10.34],		
   "freq": [50.20],		
   "im_ac_en": [102039.90],		
@@ -270,7 +551,7 @@ var gauge =[
         color:"'cyan'",// color del medidor(eval);"'cyan'"
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'orange'",// color del medidor(eval);
-        units:"'V'",// leyenda abajo del valor (eval)
+        units:"'v'",// leyenda abajo del valor (eval)
         lineWidth:'pos/8',// ancho del segmento
         lineSize:6,// largo del segmento
         lineOffset:0,
@@ -612,12 +893,12 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
 
 
 
+//  <p id="name_${i}" class="gauge-name">${gauge_3phs[i].name}</p> <!-- Changed to Phase 01, Phase 02, etc. -->
 
 
 switch(em) {
   case "em3":  
  var passGauge = (i) =>`
-  <p id="name_${i}" class="gauge-name">${gauge_3phs[i].name}</p> <!-- Changed to Phase 01, Phase 02, etc. -->
 
   <svg id="gg_${i}" onclick="display_phs(this.id)">
     <g id="g_${i}"></g>
@@ -627,6 +908,7 @@ switch(em) {
       <circle id="limite_${i}" class='limite' cx="50%" cy="50%" />
       <circle id="point_${i}" class="point" cx="50%" cy="50%" />
       <text id="limitText_${i}" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
+      
     </g>  
   </svg>
 `;
@@ -640,6 +922,7 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].max=250;
       gauge[active].units="'V'"
      }
+
      else if(i == 1)
      {
       var active = 1;
@@ -649,6 +932,7 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].color="'yellow'";
       gauge[active].units="'A'"
      }
+
      else if( i== 2)
      {
       var active = 0; 
@@ -656,7 +940,7 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].limit=(6000);
       gauge[active].units="'W'"
      }
-  
+
       const template = passGauge(i);
       document.getElementById('box1').insertAdjacentHTML('beforeend', template);
       console.log(i);
@@ -759,7 +1043,6 @@ function display_phs(id)
    //document.getElementById('box2').innerHTML=id;
    console.log(id);
    var passGauge2 = (i) =>`
-  <p id="name_${i}" class="gauge-name">phase ${i}</p> <!-- Changed to Phase 01, Phase 02, etc. -->
 
   <svg id="ggphs_${i}">
     <g id="gphs_${i}"></g>
@@ -771,6 +1054,7 @@ function display_phs(id)
       <text id="limitTextphs_${i}" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
     </g>  
   </svg>
+ 
 `;
 
 for (let i = 0; i < gauge_3phs.length; i++) {
@@ -811,12 +1095,13 @@ for (let i = 0; i < gauge_3phs.length; i++) {
      {
       var active = 0; 
       gauge[active].max=(5000);
-      gauge[active].limit=(3000);
+      gauge[active].limit=(4000);
       gauge[active].units="'W'";
       var val = payload[0].pow[i];
      } 
       
-  
+ 
+    
       gauge[active].value = val;
       drawG(val, active, limite, point, valtext, lbltext, grq);
 }
