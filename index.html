@@ -143,21 +143,20 @@ margin-top: 50px;
 }
 
 .gauge-name {
-  margin-top: 300px; /* Space between gauge and name */
-   /* Make the names bold for better visibility */
+
   font-size: 20px;
   position: absolute;
-  color:white /* Increase font size for visibility */
-}
+  color:white ;
+  display: block;}
 
 /* Set individual colors for the names */
-#name_0 {   padding-left:50px;}
-#name_1 {   margin-left: 45vw;}
-#name_2 {   right: 0;padding-right: 60px;}
+#name_0 {  }
+#name_1 {   }
+#name_2 {  }
 
 .popup {
     width: 100%;
-  display: non; 
+  display: none; 
   position: fixed;
   top: 50%; 
   left: 50%; 
@@ -181,7 +180,7 @@ margin-top: 50px;
 .namebox_main2{
 
   position: absolute; 
-  bottom: 350px;
+  top: 400px;
   width: 100%;
   display: flex; 
   justify-content: space-between; 
@@ -227,11 +226,11 @@ margin-top: 50px;
      top: 0;
       width: 100%;
         justify-content: space-between;
-         align-items: flex-end;
+      align-items: flex-end;
        
-          border: 1px solid gray;
+       border: 1px solid gray;
   
-            color:rgb(255, 255, 255) ;
+        color:rgb(255, 255, 255) ;
         
             
         
@@ -246,7 +245,35 @@ margin-top: 50px;
    font-size: 25px;
   
   }
-  
+  .namebox_main4{
+  position: relative; 
+  bottom: 250px;
+  width: 90%;
+margin: 0 auto;
+
+}
+
+
+
+  .boxa{
+ /* Add border to each div */
+  padding: 10px; /* Add some padding inside the div */
+ /* Space between divs */
+  text-align: center; /* Center the text inside each div */
+  bottom: 220px;
+  width: 80%;
+
+}
+
+table, td {
+  border:1px solid white;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+}
+th{background-color: white;
+color:black;
+padding: 10px;}
 </style>
 </head>
 <div>
@@ -266,7 +293,7 @@ margin-top: 50px;
   </div>
   <div id='box3'>
     <div id="top_box_main" ><div class="top_box">Import & Export Active Power</div></div>
-    <div id="c" style="width: 95%; position: absolute; top:100px; " ></div>
+    <div id="c" style="width: 95%; position: absolute; top: 100px; " ></div>
 
    
     </div>
@@ -277,86 +304,40 @@ margin-top: 50px;
 
   
   <div id="popup" class="popup"  style="display:none;">
-  <div id='box2'>
-    
-  </div>
+ 
+  <div id='box2'></div>
   <div class="namebox_main2">
     <div class="namebox2" >Phase 01 </div>
     <div class="namebox2">Phase 02  </div>
     <div class="namebox2" >Phase 03</div>
   </div>
-
+  <div class="namebox_main4">
+ <table class="boxa" style="border: 1px;">
+  <tr>
+    <th>Phase</th>
+    <th id="unit">229.234</th>
+  </tr>
+  <tr>
+    <td>Phase 01</td>
+    <td id="v_0">229.234</td>
+  </tr>
+  <tr>
+    <td>Phase 02</td>
+    <td id="v_1">231.04</td>
+  </tr>
+  <tr>
+    <td>Phase 03</td>
+    <td id="v_2">225.90</td>
+  </tr>
+ </table>
+  
+  </div>
 </div>
-</div>
 
-<div id="overlay"></div>
+
+<div id="overlay" onclick="hidePopup()"></div>
   <script>
 
-/*var options = {
-          series: [{
-          data: [4004]
-        }, {
-          data: [503]
-        }],
-          chart: {
-          type: 'bar',
-          height: 430
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            dataLabels: {
-              position: 'top',
-            },
-          }
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (value, opts) {
-            return value + " W"
-  },
-          offsetX: 120,
-          style: {
-            fontSize: '30px',
-            colors: ['#fff']
-          }
-        },
-        stroke: {
-          show: true,
-          width: 1,
-          colors: ['#fff']
-        },
-        tooltip: {
-          shared: true,
-          intersect: false
-        },
-        xaxis: {
-          categories: [2001],
-          labels: {
-            show: true,
-            style: {
-            fontSize:'40px',
-            colors: ['white'],
-                      },
-            
-          offsetY: 15,
-          },
-
-          offsetY: 0,
-        },
-        yaxis: {
-          labels: {
-            show: false,
-            style: {
-            fontSize:'30px'},
-          },
-
-
-        }
-        };
-
-        var chart = new ApexCharts(document.querySelector("#c"), options);
-        chart.render();*/
         var options = {
           series: [{
           data: [4000, 3000]
@@ -408,9 +389,6 @@ margin-top: 50px;
             
           offsetY: 15,
           },
-         
-
-
 
         },
 
@@ -854,48 +832,6 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
 
 }
 
-/*function setGauge() {
-
-  
-
-
-
-
-  var limiteAr = ['limite', 'limite2', 'limite3','limite4', 'limite5', 'limite6','limite7'];
-  var pointAr = ['point', 'point2', 'point3','point4', 'point5', 'point6','point7'];
-  var valtextAr = ['valtext', 'valtext2', 'valtext3','valtext4', 'valtext5', 'valtext6','valtext7'];
-  var lbltextAr = ['lbltext', 'lbltext2', 'lbltext3','lbltext4', 'lbltext5', 'lbltext6','lbltext7'];
-  var gAr = ['g1', 'g1-2', 'g1-3','g1-4', 'g1-5', 'g1-6', 'g1-7'];
-  var valueAr=[200,230,450,100,345,400,450];
-
-  for (var i = 0; i < 7; i++) {
-    if (i < 3)
-    { var active = 0;}
-    else{ var active = 1;}
-  //  var active = 0;
-    gauge[active].value=valueAr[i];
-    //gauge[active].value = 300 + Math.random() * 200;
-
-    var limite = document.getElementById(limiteAr[i]);
-    var point = document.getElementById(pointAr[i]);
-    var valtext = document.getElementById(valtextAr[i]);
-    var lbltext = document.getElementById(lbltextAr[i]);
-    var grq = gAr[i];
-    var valuepass=valueAr[i];
-
-    drawG(valuepass, active, limite, point, valtext, lbltext, grq);
-  }
-}*/
-
-
-//setGauge();
-
-
-
-
-//  <p id="name_${i}" class="gauge-name">${gauge_3phs[i].name}</p> <!-- Changed to Phase 01, Phase 02, etc. -->
-
-
 switch(em) {
   case "em3":  
  var passGauge = (i) =>`
@@ -1054,7 +990,7 @@ function display_phs(id)
       <text id="limitTextphs_${i}" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
     </g>  
   </svg>
- 
+
 `;
 
 for (let i = 0; i < gauge_3phs.length; i++) {
@@ -1080,6 +1016,8 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].color="'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'";
       var val = payload[0].volt[i];
       //console.log(val)
+      unit.innerHTML='V';
+      document.getElementById("v_"+i).innerHTML=val;
      }
      else if(id == 'gg_1')
      {
@@ -1090,6 +1028,8 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].color="'yellow'";
       gauge[active].units="'A'";
       var val = payload[0].curr[i];
+      unit.innerHTML='A';
+      document.getElementById("v_"+i).innerHTML=val;
      }
      else if( id == 'gg_2')
      {
@@ -1098,6 +1038,8 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].limit=(4000);
       gauge[active].units="'W'";
       var val = payload[0].pow[i];
+      unit.innerHTML='W';
+    document.getElementById("v_"+i).innerHTML=val;
      } 
       
  
@@ -1153,6 +1095,19 @@ for (let i = 0; i < gauge_3phs.length; i++) {
 }*/
 
 }
+
+
+function hidePopup() {
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+
+
+
+
+
+
 
   </script>
 </body>
