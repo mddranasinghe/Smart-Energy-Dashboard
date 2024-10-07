@@ -5,6 +5,9 @@
   <meta charset="utf-8">
   <title></title>
   <script src="resources\js\apexcharts.min.js"></script>
+  <script src="resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+  <script src="resources/js/connection.js"></script>
+
   <style>
 	
 
@@ -12,11 +15,11 @@ body{
   font-size:26px;
 
   font-family: 'Avenir', sans-serif;
-  background:white;
+  background:black;
   width: 98%;
   margin: 0 auto;
 }
-h1{text-align: center;}
+h1{text-align: center; color: white;}
 tspan{
   font-size:.4em;
  }
@@ -35,7 +38,7 @@ tspan{
   padding-top: 30px;
   padding-bottom: 40px;
 }
-#box3
+#box3,#box4
 {
    margin-left: 0%;
    position: relative;
@@ -150,13 +153,11 @@ margin-top: 50px;
   display: block;}
 
 /* Set individual colors for the names */
-#name_0 {  }
-#name_1 {   }
-#name_2 {  }
+
 
 .popup {
     width: 100%;
-  display: none; 
+  display: noe; 
   position: fixed;
   top: 50%; 
   left: 50%; 
@@ -165,6 +166,7 @@ margin-top: 50px;
   padding: 12px 12px 12px 12px;
   z-index: 9999; 
   color: white;
+  height: 755px;
 }
 .namebox2{ 
   flex: 1; 
@@ -172,6 +174,7 @@ margin-top: 50px;
  color:white;
  padding: 15px;
  font-size: 35px;
+
 
 
 
@@ -185,6 +188,7 @@ margin-top: 50px;
   display: flex; 
   justify-content: space-between; 
   align-items: flex-end;
+  
 
   }
 #overlay {
@@ -206,7 +210,9 @@ margin-top: 50px;
    text-align: center;
    color:white;
    padding: 20px;
-   font-size: 35px;
+   font-size: 30px;
+
+ 
   
 }
 .namebox_main{
@@ -219,7 +225,13 @@ margin-top: 50px;
 
 
   }
+  #n_0{ 
+    text-align: left;
+  padding-left: 50px;}
 
+  #n_2{ 
+    text-align: right;
+  padding-right: 50px;}
   #top_box_main{
 
     position: absolute;
@@ -228,7 +240,7 @@ margin-top: 50px;
         justify-content: space-between;
       align-items: flex-end;
        
-       border: 1px solid gray;
+      /* border: 1px solid gray;*/
   
         color:rgb(255, 255, 255) ;
         
@@ -274,35 +286,40 @@ table, td {
 th{background-color: white;
 color:black;
 padding: 10px;}
+
+
+
 </style>
 </head>
 <div>
   <h1> Smart Energy Dashboard</h1>
- 
-  <div id='box1'>
-    <div id="top_box_main" ><div class="top_box">01H :30M :45S</div></div>
+ <div>
 
-    <div class="namebox_main">
-      <div class="namebox" >Voltage </div>
-      <div class="namebox">Current  </div>
-      <div class="namebox" >Power</div>
-    </div>
-    
-    
-    
-  </div>
+
+<div class="container" style="
+color: white;
+padding: 15px;
+width: 95%;
+height: 1200px;
+overflow: scroll;
+border: 1px solid #ccc;">
+
+  <div id='box1'></div>
+
   <div id='box3'>
     <div id="top_box_main" ><div class="top_box">Import & Export Active Power</div></div>
-    <div id="c" style="width: 95%; position: absolute; top: 100px; " ></div>
+    <div id="c0" style="width: 95%; position: absolute; top: 100px; " ></div>  
+  </div>
 
-   
-    </div>
-
-
-
-
-
+    <div id='box4'>
+      <div id="top_box_main" ><div class="top_box">Import & Export Reactive Power</div></div>
+      <div id="c1" style="width: 95%; position: absolute; top: 100px; " ></div>
   
+     
+    </div>
+</div>
+
+
   <div id="popup" class="popup"  style="display:none;">
  
   <div id='box2'></div>
@@ -337,103 +354,107 @@ padding: 10px;}
 
 <div id="overlay" onclick="hidePopup()"></div>
   <script>
+    let payload,gauge_3phs,gauge_1phs=0, em="em3",id_gg;
+let dq=0;
 
-        var options = {
-          series: [{
-          data: [4000, 3000]
-        }],
-          chart: {
-          type: 'bar',
-          height: 320
-        },
-        plotOptions: {
-          bar: {
-            barHeight: '70%',
-            distributed: true,
-            horizontal: true,
-            dataLabels: {
-              position: 'bottom'
-            },
-          }
-        },
-        colors: ['#00CD8D', '#00FFFF'
-        ],
-        dataLabels: {
-          enabled: true,
-          textAnchor: 'start',
-          style: {
-            fontSize: '25px',
-            colors: ['#fff']
-          },
-          formatter: function (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val +' W'
-          },
-          offsetX: 0,
-          dropShadow: {
-            enabled: true
-          }
-        },
-        stroke: {
-          width: 1,
-          colors: ['#fff']
-        },
-        xaxis: {
-          categories: ['Import', 'Export'
-          ],
-          labels: {
-            show: true,
-            style: {
-            fontSize:'40px',
-            colors: ['white'],
-                      },
-            
-          offsetY: 15,
-          },
+function connect(){//connect------------------------------------------------------------------
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
 
-        },
+}catch{}}
 
+function onConnect() {
+try{
+    console.log("onConnect");    
+     client.subscribe('node/em3/#');
+  //  sendCommandToDevice(publish_topic+"info","read");
+  
+}
+catch{}
+}
 
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
 
-        yaxis: {
-          labels: {
-            show: false
-          }
-        },
-        title: {
-            text: 'Custom DataLabels',
-            align: 'center',
-            floating: true
-        },
-        subtitle: {
-            text: 'Category Names as DataLabels inside bars',
-            align: 'center',
-        },
-        tooltip: {
-          theme: 'dark',
-          x: {
-            show: false
-          },
-          y: {
-            title: {
-              formatter: function () {
-                return ''
-              }
-            }
-          }
-        }
+function onMessageArrived(message) {
+  try {
+    topic = message.destinationName;
+    payloadTest = message.payloadString;
+    
+    console.log("Topic:", topic);
+    topicsArray = topic.split("/");
+
+    if (topicsArray[2] === 'list') {
+    
+     payload = typeof payloadTest === 'string' ? JSON.parse(payloadTest) : payloadTest;
+
+      console.log("Payload:", payload);
+
+      if (Array.isArray(payload) && payload.length > 0) {
+        // 3-phase gauge data
+         gauge_3phs = [
+          { value: payload[0].volt_avg[0], name: "Voltage Average" },  
+          { value: payload[0].curr_sum[0], name: "Current Total" },  
+          { value: payload[0].pow_tot[0], name: "Power Total" }      
+        ];
+
+        // 1-phase gauge data
+         gauge_1phs = [
+          { value: payload[0].volt[0], name: "Voltage" },  
+          { value: payload[0].curr[0], name: "Current" },  
+          { value: payload[0].pow[0], name: "Power" }      
+        ];
+
+        Im_ex = [{im: payload[0].im_ac_en[0],ex: payload[0].ex_ac_en[0]},
+                 {im: payload[0].im_re_en[0],ex: payload[0].ex_re_en[0]}
+          ]
+
+         //dq=payload[0].im_ac_en[0];
         
-        };
+        dis(payload[0]); 
+       display_phs(payload[0]);
+   
+      } else {
+        console.error("Payload is not an array or is empty");
+      }
+    }
+  } catch (error) {
+    console.error("Error processing message:", error);
+  }
+}
 
-        var chart = new ApexCharts(document.querySelector("#c"), options);
-        chart.render();
-      
-var payload=[
+
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+ //   offlinestatus('offline');
+  }
+  
+}
+    
+
+
+/*var payload=[
    {		
   "ts": [253961],		
   "id": [1],		
   "volt": [229.92,231.29,225.95],		//
   "curr": [4.42,5.07, 21.53],		//
-  "curr_sum": [31.02],		//
+  "curr_sum": [26.02],		//
   "pow": [975.44,1161.38,4835.45],		//
   "pow_tot": [6972.27],		//
   "v_am": [995.44,1165.54,4845.08],		
@@ -464,7 +485,7 @@ var payload=[
   "id": [2],
   "volt": [229.92],
   "curr": [4.42],
-  "pow": [975.44],
+  "pow": [474.44],
   "ac_ap": [995.44],
   "re_ap": [-198.62],
   "pow_fac": [0.98],
@@ -477,20 +498,11 @@ var payload=[
   "ex_re_en": [11615.90],
   "tot_re_en": [17648.90]
 }
-];
+];*/
 
-var topic="node/em3/n2b/16261432/dev/1";
-var em="em3";
-var gauge_3phs = [
-  { value: payload[0].volt_avg[0], name: "Voltage Avareage (V)" },  
-  { value: payload[0].curr_sum[0], name: "Current Total (A)" },  
-  { value: payload[0].pow_tot[0], name: "PowerTotal (W)" }      
-];
-var gauge_1phs = [
-  { value: payload[1].volt[0], name: "Voltage (V)"},  
-  { value: payload[1].curr[0], name: "Current (A)"},  
-  { value: payload[1].pow[0], name: "Power (W)" }      
-];
+//var topic="node/em3/n2b/16261432/dev/1";
+
+
 
 
 function  addPath(gr,sx,sy,ex,ey,g)
@@ -522,10 +534,10 @@ var gauge =[
         angle:270,// angulo total del medidor
         start:155,// angulo de inicio del medidor
         divs:50,// divisiones
-        value:467.09,// valor inicial
-        limit:0,// valor del limite (escala secundaria)
+        value:0,// valor inicial
+        limit:400,// valor del limite (escala secundaria)
         min:0,// valor mínimo del medidor
-        max:7000,// valor máximo (fondo de escala) 
+        max:0,// valor máximo (fondo de escala) 
         color:"'cyan'",// color del medidor(eval);"'cyan'"
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'orange'",// color del medidor(eval);
@@ -541,7 +553,7 @@ var gauge =[
 
         scale:{
           lineWidth:'pos/8',
-          lineSize:2,
+          lineSize:6,
           color:"'white'",
           lineOffset:0,
 
@@ -558,9 +570,9 @@ var gauge =[
         },
 
           scaleLimit:{
-          lineWidth:'pos/8', 
+         lineWidth:'pos/8', 
           lineSize:6,
-          color:"'orange'",
+          color:"'white'",
           needleStart:0,
           needleEnd:-6,
           pointPos:9,
@@ -575,10 +587,10 @@ var gauge =[
         angle:360,// angulo total del medidor
         start:270,// angulo de inicio del medidor
         divs:50,// divisiones
-        value:500,// valor inicial
+        value:0,// valor inicial
         limit:0,// valor del limite (escala secundaria)
         min:0,// valor mínimo del medidor
-        max:5020,// valor máximo (fondo de escala) 
+        max:0,// valor máximo (fondo de escala) 
         color:"'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'",// color del medidor(eval);
         alertColor:"'red'",// color del medidor(eval);
         limitColor:"'yellow'",// color del medidor(eval);
@@ -592,17 +604,17 @@ var gauge =[
         pointColor:"'magenta'",
         refresh:100,
         scale:{
-          lineWidth:1,
-          lineSize:1,
+          lineWidth:2,
+          lineSize:3,
           color:"'white'",
-          lineOffset:1,
+          lineOffset:0,
 
         },
 
           scaleLimit:{
           lineWidth:3,
           lineSize:3,
-          color:"'orange'",
+          color:"'white'",
           needleStart:-3,
           needleEnd:2,
           pointPos:5,
@@ -624,12 +636,6 @@ var cnt=0;
 var active=0;
 var pos=0;
 var valuePrint=0;
-/*var limiteq=0;
- var pointq= 0;
-  var valtextq =0;
-  var lbltextq=0;
-  var gr=0;*/
- // var valtextq =0;
 function drawG(value1, active, limite, point, valtext, lbltext, grq)
 {
   
@@ -642,7 +648,7 @@ function drawG(value1, active, limite, point, valtext, lbltext, grq)
   var g = gauge[active];
   var value= eval(g.value);
   var valuePrint=value;
-  console.log('my',value);
+  //console.log('my',value);
   var gr = grq;
   var scaleLimit = (g.scaleLimit) ? g.scaleLimit:g;                 
   var scaleOver = (g.scaleOver) ? g.scaleOver:g;                 
@@ -816,7 +822,7 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
   if(g.refresh)rfrsh=g.refresh;
       setTimeout(function(){
       
-      console.log('valueInt55-- ',g.refresh );
+     // console.log('valueInt55-- ',g.refresh );
       },rfrsh);
     drawG(value, active, limite, point, valtext, lbltext, grq);
       
@@ -830,17 +836,30 @@ limiteq.style.transform  = `rotate(${limitdegree}deg) translateY(-${(g.radius+sc
 
 }
 
+
+
 }
 
-switch(em) {
-  case "em3":  
- var passGauge = (i) =>`
 
-  <svg id="gg_${i}" onclick="display_phs(this.id)">
+function dis(payload){
+  document.getElementById('box1').innerHTML = '';
+  document.getElementById('c1').innerHTML = '';
+  document.getElementById('c0').innerHTML = '';
+
+switch(em) {
+    case "em3":  
+  
+ var passGauge = (i) =>`
+  <div id="top_box_main" ><div class="top_box">01H :30M :45S</div></div>
+    <div class="namebox_main">
+      <div class="namebox" id="n_${i}">${gauge_3phs[i].name}</div>
+   
+   </div>
+  <svg id="gg_${i}" onclick="popupWin(this.id)">
     <g id="g_${i}"></g>
     <g id="g2">
       <text id="valtext_${i}" class="smooth" x="50%" y="55%" text-anchor="middle" alignment-baseline="bottom"></text>
-      <text id="lbltext_${i}" class="lbltext" x="50%" y="63%" text-anchor="middle" alignment-baseline="central"></text>
+      <text id="lbltext_${i}" class="lbltext" x="50%" y="68%" text-anchor="middle" alignment-baseline="central"></text>
       <circle id="limite_${i}" class='limite' cx="50%" cy="50%" />
       <circle id="point_${i}" class="point" cx="50%" cy="50%" />
       <text id="limitText_${i}" x="50%" y="50%" text-anchor="middle" alignment-baseline="central"></text>
@@ -851,12 +870,16 @@ switch(em) {
 
 for (let i = 0; i < gauge_3phs.length; i++) {
   try {
-
+  
      if( i == 0)
      {
       var active = 1;
       gauge[active].max=250;
       gauge[active].units="'V'"
+      gauge[active].limit=(0);
+      gauge[active].angle=360;
+      gauge[active].start=270;
+      gauge[active].color="'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'";
      }
 
      else if(i == 1)
@@ -866,15 +889,17 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       gauge[active].angle=270;
       gauge[active].start=180;
       gauge[active].color="'yellow'";
-      gauge[active].units="'A'"
+      gauge[active].units="'A'";
+      gauge[active].limit=(0);
      }
 
      else if( i== 2)
      {
-      var active = 0; 
-      gauge[active].max=(gauge_3phs[i].value + 500);
+      var active = 1; 
+      gauge[active].max=(7000);
       gauge[active].limit=(6000);
       gauge[active].units="'W'"
+      gauge[active].color="'rgb(' + (pos * 4) + ',' + (255 - (pos * 2)) + ',' + (255 - (pos * 4)) + ')'";
      }
 
       const template = passGauge(i);
@@ -887,7 +912,9 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       var valtext = document.getElementById('valtext_' + i);
       var lbltext = document.getElementById('lbltext_' + i);
       var grq = 'g_' + i;  
-
+     // var g= document.getElementById("n_"+i);
+     //  g.innerHTML = gauge_3phs[i].name;
+     // console.log(gauge_3phs[i].name);
       gauge[active].value = gauge_3phs[i].value;
       drawG(gauge_3phs[i].value, active, limite, point, valtext, lbltext, grq);
 
@@ -902,7 +929,6 @@ for (let i = 0; i < gauge_3phs.length; i++) {
    
   
  var passGauge = (i) =>`
-     <p id="name_${i}" class="gauge-name">${gauge_1phs[i].name}</p> <!-- Changed to Phase 01, Phase 02, etc. -->
 
   <svg id="gg_${i}">
     <g id="g_${i}"></g>
@@ -923,22 +949,28 @@ for (let i = 0; i < gauge_1phs.length; i++) {
       var active = 1;
       gauge[active].max=250;
       gauge[active].units="'V'"
+      gauge[active].limit=(0);
+      gauge[active].angle=360;
+      gauge[active].start=270;
+      gauge[active].color="'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'";
      }
      else if(i == 1)
      {
       var active = 1;
-      gauge[active].max=gauge_1phs[i].value+ 5;
+      gauge[active].max=gauge_3phs[i].value+ 8;
       gauge[active].angle=270;
       gauge[active].start=180;
       gauge[active].color="'yellow'";
-      gauge[active].units="'A'"
+      gauge[active].units="'A'";
+      gauge[active].limit=(0);
      }
      else if( i== 2)
      {
-      var active = 0; 
-      gauge[active].max=(gauge_1phs[i].value + 50);
-      gauge[active].limit=(800);
-        gauge[active].units="'W'"
+      var active = 1; 
+      gauge[active].max=(7000);
+      gauge[active].limit=(6000);
+      gauge[active].units="'W'"
+      gauge[active].color="'rgb(' + (pos * 4) + ',' + (255 - (pos * 2)) + ',' + (255 - (pos * 4)) + ')'";
      }
   
    
@@ -966,18 +998,128 @@ for (let i = 0; i < gauge_1phs.length; i++) {
 
 }
 
+var options = {
+          series: [{
+          data: []
+        }],
+          chart: {
+          type: 'bar',
+          height: 320,
+          animations: {
+        enabled: false,},
+        animateGradually: {
+            enabled: true,
+            delay: 150
+        },
+        },
+        plotOptions: {
+          bar: {
+            barHeight: '70%',
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: 'bottom'
+            },
+          }
+        },
+        colors: ['#00CD8D', '#00FFFF'
+        ],
+        dataLabels: {
+          enabled: true,
+          textAnchor: 'start',
+          style: {
+            fontSize: '25px',
+            colors: ['#fff']
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val +' W'
+          },
+          offsetX: 0,
+          dropShadow: {
+            enabled: true
+          }
+        },
+        stroke: {
+          width: 1,
+          colors: ['#fff']
+        },
+        xaxis: {
+          categories: ['Import', 'Export'
+          ],
+          labels: {
+            show: true,
+            style: {
+            fontSize:'60px',
+            colors: ['white'],
+                      },
+            
+          offsetY: 20,
+          },
 
+        },
 
-function display_phs(id)
-{
-//var val=0;
-
-  document.getElementById('box2').innerHTML = '';
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        title: {
+            text: 'Custom DataLabels',
+            align: 'center',
+            floating: true
+        },
+        subtitle: {
+            text: 'Category Names as DataLabels inside bars',
+            align: 'center',
+        },
+        tooltip: {
+          theme: 'dark',
+          x: {
+            show: false
+          },
+          y: {
+            title: {
+              formatter: function () {
+                return ''
+              }
+            }
+          }
+        }
+        
+        };
+       
   
+
+for (let x = 0; x < Im_ex.length; x++) {
+
+  var im = Im_ex[x].im;
+  var ex = Im_ex[x].ex;
+  options.series[0].data = [im, ex]; 
+  var chart = new ApexCharts(document.querySelector("#c" + x), options);
+  chart.render();
+}
+
+}
+
+
+
+function popupWin(id)
+{
   document.getElementById('popup').style.display='block';
   document.getElementById('overlay').style.display='block';
-   //document.getElementById('box2').innerHTML=id;
-   console.log(id);
+  id_gg=id;
+  display_phs(payload[0]);
+}
+
+function display_phs(payload)
+{
+  var val = 0;  // Default value
+    var active = 0;  // Default active gauge index
+
+    // Make sure gauge[active] exists
+   
+  
+    document.getElementById('box2').innerHTML = '';
    var passGauge2 = (i) =>`
 
   <svg id="ggphs_${i}">
@@ -1006,38 +1148,44 @@ for (let i = 0; i < gauge_3phs.length; i++) {
       var lbltext = document.getElementById('lbltextphs_' + i);
       var grq = 'gphs_' + i;  
     
-      if(id == 'gg_0')
+      if(id_gg == 'gg_0')
      {
       var active = 1;
       gauge[active].max=250;
       gauge[active].units="'V'"
+      gauge[active].limit=(0);
       gauge[active].angle=360;
       gauge[active].start=270;
       gauge[active].color="'rgb('+(pos*4)+','+(255-(pos*2))+','+(255-(pos*4))+')'";
-      var val = payload[0].volt[i];
+      var val = payload.volt[i];
       //console.log(val)
       unit.innerHTML='V';
       document.getElementById("v_"+i).innerHTML=val;
+
+
+      
      }
-     else if(id == 'gg_1')
+     else if(id_gg == 'gg_1')
      {
       var active = 1;
-      gauge[active].max=(30);
+      gauge[active].max=50;
       gauge[active].angle=270;
       gauge[active].start=180;
       gauge[active].color="'yellow'";
       gauge[active].units="'A'";
-      var val = payload[0].curr[i];
+      gauge[active].limit=(0);
+      var val = payload.curr[i];
       unit.innerHTML='A';
       document.getElementById("v_"+i).innerHTML=val;
      }
-     else if( id == 'gg_2')
+     else if( id_gg == 'gg_2')
      {
-      var active = 0; 
-      gauge[active].max=(5000);
-      gauge[active].limit=(4000);
-      gauge[active].units="'W'";
-      var val = payload[0].pow[i];
+      var active = 1; 
+      gauge[active].max=(7000);
+      gauge[active].limit=(6000);
+      gauge[active].units="'W'"
+      gauge[active].color="'rgb(' + (pos * 4) + ',' + (255 - (pos * 4)) + ',' + (255 - (pos * 20)) + ')'";
+      var val = payload.pow[i];
       unit.innerHTML='W';
     document.getElementById("v_"+i).innerHTML=val;
      } 
@@ -1046,53 +1194,10 @@ for (let i = 0; i < gauge_3phs.length; i++) {
     
       gauge[active].value = val;
       drawG(val, active, limite, point, valtext, lbltext, grq);
+
+  
 }
 
-
-/*for (let i = 0; i < gauge_3phs.length; i++) {
-  try {
-
-     if( i == 0)
-     {
-      var active = 1;
-      gauge[active].max=250;
-      gauge[active].units="'V'"
-     }
-     else if(i == 1)
-     {
-      var active = 1;
-      gauge[active].max=gauge_3phs[i].value+ 50;
-      gauge[active].angle=270;
-      gauge[active].start=180;
-      gauge[active].color="'yellow'";
-      gauge[active].units="'A'"
-     }
-     else if( i== 2)
-     {
-      var active = 0; 
-      gauge[active].max=(gauge_3phs[i].value + 500);
-      gauge[active].limit=(6000);
-      gauge[active].units="'W'"
-     }
-  
-      const template = passGauge(i);
-      document.getElementById('box2').insertAdjacentHTML('beforeend', template);
-      console.log(i);
-
-     
-      var limite = document.getElementById('limite_' + i);
-      var point = document.getElementById('point_' + i);
-      var valtext = document.getElementById('valtext_' + i);
-      var lbltext = document.getElementById('lbltext_' + i);
-      var grq = 'g_' + i;  
-
-      gauge[active].value = gauge_3phs[i].value;
-      drawG(gauge_3phs[i].value, active, limite, point, valtext, lbltext, grq);
-
-  } catch (error) {
-    console.error('Error drawing gauge for index ' + i + ':', error);
-  }
-}*/
 
 }
 
@@ -1106,7 +1211,7 @@ function hidePopup() {
 
 
 
-
+  connect();
 
 
   </script>
