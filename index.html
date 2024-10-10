@@ -293,25 +293,32 @@ height: 75vh;
 overflow: scroll;
 border: 1px solid #ccc;margin: 0 auto;
 }
-.more_info{
-
+#more_info_box {
+  /* No need for position here as we're fixing .more_info */
+  width: 100%;
+  background-color:black;
+  height: 120px;
+  position: fixed;
   bottom: 2%;
-   position: fixed;
-   background-color:#313946; 
-   width:96% ;
-   height:70px;
-   display: flex;
-margin: 0 auto;
-
-   left: 50%;
-   transform: translateX(-50%); 
-    border-radius: 10px;
-    padding-top: 40px;
-color: white;
-    justify-content: center;
-    font-size: 35px;
-    
 }
+
+.more_info {
+  position: fixed; /* Sticks to the bottom of the viewport */
+  bottom: 2%; /* Distance from the bottom of the page */
+  background-color: #313946; 
+  width: 96%; /* Adjust width as necessary */
+  height: 90px;
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  justify-content: center; /* Center text horizontally */
+  align-items: center; /* Center text vertically */
+  font-size: 35px;
+  z-index: 999; /* Ensure it's above other content */
+}
+
 </style>
 </head>
 <div>
@@ -335,8 +342,8 @@ color: white;
      
     </div>
 </div>
-
-<div class="more_info">More Info</div>
+<div id="more_info_box">
+<div class="more_info">More Info</div></div>
 
   <div id="popup" class="popup"  style="display:none;">
  
