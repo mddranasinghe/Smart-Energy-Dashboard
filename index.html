@@ -13,8 +13,7 @@
 
 body{
   font-size:26px;
-
-  font-family: 'Avenir', sans-serif;
+font-family: 'Avenir';
   background:black;
   width: 98%;
   margin: 0 auto;
@@ -287,46 +286,113 @@ th{background-color: white;
 color:black;
 padding: 10px;}
 
-.container{
+#container{
 width: 98%;
 height: 75vh;
 overflow: scroll;
 border: 1px solid #ccc;margin: 0 auto;
 }
-#more_info_box {
-  /* No need for position here as we're fixing .more_info */
+#mo_in_but_box {
   width: 100%;
   background-color:black;
-  height: 120px;
+  height: 130px;
   position: fixed;
   bottom: 2%;
 }
 
-.more_info {
-  position: fixed; /* Sticks to the bottom of the viewport */
-  bottom: 2%; /* Distance from the bottom of the page */
-  background-color: #313946; 
-  width: 96%; /* Adjust width as necessary */
-  height: 90px;
+.mo_in_but {
+  position: fixed;  
+  bottom: 2%; 
+  background-color: rgba(0, 0, 255, 0.311); 
+  width: 96%; 
+  height: 100px;
   left: 50%;
-  transform: translateX(-50%); /* Center horizontally */
+  transform: translateX(-50%);
   border-radius: 10px;
   color: white;
   display: flex;
-  justify-content: center; /* Center text horizontally */
-  align-items: center; /* Center text vertically */
+  justify-content: center; 
+  align-items: center; 
   font-size: 35px;
-  z-index: 999; /* Ensure it's above other content */
+  z-index: 999; 
+}
+#mo_in_container{
+
+  width:100%;
+ 
+  display:none;
+  position: relative;
+  margin: 0 auto;
+
+
+
+}
+#more_tb{
+  width:92%;
+ height: 500px;
+
+  position: absolute;
+  background-color:#313946; 
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 35px;
+  
+  font-size: 2vh;
+
+}
+#more_tb #more_col
+{
+  border: 1.5px solid rgba(255, 255, 255, 0.164);
+  padding-bottom: 60px;
+  padding-left: 0px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: white ;
+  margin-bottom:25px;
+
 }
 
+#more_col #more_rw_lft ,.phs
+{
+ color: white;
+  float: left;
+
+}
+#more_col #more_rw_rig,.phs_vl
+{
+
+  
+  color:white;
+  float: right;
+
+  
+}
+
+#more_col img{
+
+  width: 40px;
+  height: 60px;
+  padding-right:15px;
+  transition:transform 0.5s;
+
+}
+#more_col #more_phs
+{
+  display: none;
+ width: 70%;
+ position: relative;
+ margin: 0 auto;
+ top: 10px;
+
+
+}
 </style>
 </head>
-<div>
+<div id="Dashboard" style="display: nne;">
   <h1> Smart Energy Dashboard</h1>
- <div>
-
-
-<div class="container">
+ 
+<div id="container">
 
   <div id='box1'></div>
 
@@ -342,8 +408,52 @@ border: 1px solid #ccc;margin: 0 auto;
      
     </div>
 </div>
-<div id="more_info_box">
-<div class="more_info">More Info</div></div>
+
+<div id="mo_in_but_box">
+<div class="mo_in_but"  onclick="MoreInfo()">More Info</div></div>
+</div>
+
+<div id="mo_in_container" >
+
+<div id="head">
+  <h1>More Info</h1>
+</div>
+
+<div id="more_tb">
+<div id="more_col">
+  <div id="more_rw_lft">
+  power
+  </div>
+  <div id="more_rw_rig">
+ 230.22v
+  </div>
+</div>
+
+
+<div id="more_col">
+  <div id="more_rw_lft">
+  power
+  </div>
+  <div id="more_rw_rig">
+<img id="more_img" onclick="rotateImg()"src="resources\image\greater.png">
+  </div><br>
+  <div id="more_phs"><br>
+    <div class="phs">Phase 01</div>
+      <div class="phs_vl"> 230.22v</div><br>
+
+      <div class="phs">Phase 01</div>
+      <div class="phs_vl"> 230.22v</div><br>
+
+      <div class="phs">Phase 01</div>
+      <div class="phs_vl"> 230.22v</div><br>
+</div>
+</div>
+
+
+
+</div>
+
+
 
   <div id="popup" class="popup"  style="display:none;">
  
@@ -378,6 +488,8 @@ border: 1px solid #ccc;margin: 0 auto;
 
 
 <div id="overlay" onclick="hidePopup()"></div>
+
+
   <script>
     let payload,gauge_3phs,gauge_1phs=0, em="em3",id_gg;
 let dq=0;
@@ -472,7 +584,12 @@ function onConnectionLost(responseObject) {
 }
     
 
+function MoreInfo()
+{
+  Dashboard.style.display = 'none';
+  mo_in_container.style.display='block';
 
+}
 /*var payload=[
    {		
   "ts": [253961],		
@@ -526,8 +643,22 @@ function onConnectionLost(responseObject) {
 ];*/
 
 //var topic="node/em3/n2b/16261432/dev/1";
+let isRotated = false; 
+function rotateImg()
+{
 
+  if (isRotated) {
+ 
+    more_img.style.transform = 'rotate(0deg)';
+    more_phs.style.display="none";
+  } else {
 
+    more_img.style.transform = 'rotate(90deg)';
+    more_phs.style.display="block";
+  }
+  
+  isRotated = !isRotated; 
+}
 
 
 function  addPath(gr,sx,sy,ex,ey,g)
