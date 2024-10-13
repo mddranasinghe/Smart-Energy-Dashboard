@@ -329,7 +329,7 @@ border: 1px solid #ccc;margin: 0 auto;
 }
 #more_tb{
   width:92%;
- height: 500px;
+ height: 80vh;
 
   position: absolute;
   background-color:#313946; 
@@ -338,28 +338,28 @@ border: 1px solid #ccc;margin: 0 auto;
   padding: 2vh;
   
   font-size: 40px;
-
+overflow: auto;
 }
-#more_tb #more_col
+#more_tb .more_col
 {
   border: 1.5px solid rgba(255, 255, 255, 0.164);
-  padding-bottom: 60px;
+  padding-bottom: 90px;
   padding-left: 0px;
   border-top: none;
   border-left: none;
   border-right: none;
   color: white ;
-  margin-bottom:30px;
+  margin-bottom:40px;
 
 }
 
-#more_col #more_rw_lft ,.phs
+.more_col .more_rw_lft ,.phs
 {
  color: white;
   float: left;
 
 }
-#more_col #more_rw_rig,.phs_vl
+.more_col .more_rw_rig,.phs_vl
 {
 
   
@@ -369,7 +369,7 @@ border: 1px solid #ccc;margin: 0 auto;
   
 }
 
-#more_col img{
+.more_col img{
 
   width: 40px;
   height: 60px;
@@ -377,7 +377,7 @@ border: 1px solid #ccc;margin: 0 auto;
   transition:transform 0.4s;
 
 }
-#more_col #more_phs
+.more_col .more_phs
 {
   display: none;
  width: 70%;
@@ -389,9 +389,14 @@ border: 1px solid #ccc;margin: 0 auto;
 
 }
 .phs_set{
-padding: 20px;
+padding: 35px;
 
 }
+.phs_vl
+{
+
+}
+
 </style>
 </head>
 <div id="Dashboard" style="display: none;">
@@ -425,47 +430,6 @@ padding: 20px;
 </div>
 
 <div id="more_tb">
-<div id="more_col">
-  <div id="more_rw_lft">
-  power
-  </div>
-  <div id="more_rw_rig">
- 230.22v
-  </div>
-</div>
-
-
-<div id="more_col"  onclick="rotateImg()">
-  <div id="more_rw_lft">
-    Maximum Phase Current Demand
-  </div>
-  <div id="more_rw_rig" >
-<img id="more_img" onclick="rotateImg()"src="resources\image\greater.png">
-  </div>
-  <div id="more_phs"><br>
-    <div class="phs_set">
-      <div class="phs">Phase 01</div>
-      <div class="phs_vl"> 230.22v</div><br>
-
-    </div>
-
-    <div class="phs_set">
-      <div class="phs">Phase 01</div>
-      <div class="phs_vl"> 230.22v</div><br>
-
-    </div>
-
-    <div  class="phs_set">
-      <div class="phs">Phase 01</div>
-      <div class="phs_vl"> 230.22v</div><br>
-
-    </div>
-   
-</div>
-</div>
-
-
-
 </div>
 
 
@@ -507,7 +471,7 @@ padding: 20px;
 
 
   <script>
-    let payload,gauge_3phs,gauge_1phs=0, em="em3",id_gg;
+    let payload,gauge_3phs,gauge_1phs=0, em="em3",id_gg,more_3phs;
 let dq=0;
 
 function connect(){//connect------------------------------------------------------------------
@@ -564,7 +528,6 @@ function onMessageArrived(message) {
           { value: payload[0].pow_tot[0], name: "Power Total" }      
         ];
 
-        // 1-phase gauge data
          gauge_1phs = [
           { value: payload[0].volt[0], name: "Voltage" },  
           { value: payload[0].curr[0], name: "Current" },  
@@ -575,8 +538,19 @@ function onMessageArrived(message) {
                  {im: payload[0].im_re_en[0],ex: payload[0].ex_re_en[0]}
           ]
 
-         //dq=payload[0].im_ac_en[0];
-        
+        more_3phs =[
+          { value: payload[0].v_am_tot[0],phs1:payload[0].v_am[0],phs2:payload[0].v_am[1],phs3:payload[0].v_am[2], name: "Volt Amps Total" },  
+          { value: payload[0].v_am_re_tot[0],phs1:payload[0].v_am_re[0],phs2:payload[0].v_am_re[1],phs3:payload[0].v_am_re[2], name: "Phase Angle Total" },
+          { value: payload[0].pf_tot[0],phs1:payload[0].pf[0],phs2:payload[0].pf[1],phs3:payload[0].pf[2], name: "Power Factor Total" },  
+          { value: payload[0].pa_tot[0],phs1:payload[0].pa[0],phs2:payload[0].pa[1],phs3:payload[0].pa[2], name: "Phase Angle Total" },
+          { value: payload[0].tot_sys_pow_dem[0], name: "Total System Power Demand" },  
+          { value: payload[0].max_tot_sys_pow[0], name: "Maximum Total System Power" },    
+          { value: payload[0].n_curr_dem[0], name: "Neutral Current Demand" },  
+          { value: payload[0].max_n_curr_dem[0], name: "Maximum Neutral Current Demand" },   
+          { value: payload[0].n_curr[0], name: "Neutral Current" }
+        ];
+        console.log(Object.keys(more_3phs[2]).length, 'dfdddddddddd');
+
         dis(payload[0]); 
        display_phs(payload[0]);
    
@@ -600,12 +574,6 @@ function onConnectionLost(responseObject) {
 }
     
 
-function MoreInfo()
-{
-  Dashboard.style.display = 'none';
-  mo_in_container.style.display='block';
-
-}
 /*var payload=[
    {		
   "ts": [253961],		
@@ -659,22 +627,33 @@ function MoreInfo()
 ];*/
 
 //var topic="node/em3/n2b/16261432/dev/1";
+
+
+function MoreInfo()
+{
+  Dashboard.style.display = 'none';
+  mo_in_container.style.display='block';
+
+}
 let isRotated = false; 
-function rotateImg()
+function rotateImg(idImg,idPhs)
 {
 
+ // var more_img=document.getElementById(idImg);
+ // var more_phs=document.getElementById(idPhs);
   if (isRotated) {
  
-    more_img.style.transform = 'rotate(0deg)';
-    more_phs.style.display="none";
+    idImg.style.transform = 'rotate(0deg)';
+    idPhs.style.display="none";
   } else {
 
-    more_img.style.transform = 'rotate(90deg)';
-    more_phs.style.display="block";
+    idImg.style.transform = 'rotate(90deg)';
+    idPhs.style.display="block";
   }
   
   isRotated = !isRotated; 
 }
+
 
 
 function  addPath(gr,sx,sy,ex,ey,g)
@@ -1017,6 +996,7 @@ function dis(payload){
   document.getElementById('box1').innerHTML = '';
   document.getElementById('c1').innerHTML = '';
   document.getElementById('c0').innerHTML = '';
+  document.getElementById('more_tb').innerHTML = '';
 
 switch(em) {
     case "em3":  
@@ -1096,6 +1076,62 @@ for (let i = 0; i < gauge_3phs.length; i++) {
 }
 
 
+ var moreInfo = (i) =>`
+<div class="more_col" >
+  <div class="more_rw_lft">
+     
+${more_3phs[i].name}
+  </div>
+  <div class="more_rw_rig">
+${more_3phs[i].value}
+  </div>
+</div>`;
+
+ var moreInfo_phs = (i) =>`
+<div class="more_col">
+  <div class="more_rw_lft">
+  ${more_3phs[i].name}
+  </div>
+  <div class="more_rw_rig" > ${more_3phs[i].value}
+<img id="more_img_${i}" onclick="rotateImg(more_img_${i},more_phs_${i})" src="resources/image/greater.png">
+  </div>
+  <div class="more_phs" id='more_phs_${i}'><br>
+    <div class="phs_set">
+      <div class="phs">Phase 01</div>
+      <div class="phs_vl">${more_3phs[i].phs1}</div><br>
+
+    </div>
+
+    <div class="phs_set">
+      <div class="phs">Phase 02</div>
+      <div class="phs_vl"> ${more_3phs[i].phs2}</div><br>
+
+    </div>
+
+    <div  class="phs_set">
+      <div class="phs">Phase 03</div>
+      <div class="phs_vl">${more_3phs[i].phs3}</div><br>
+
+    </div>
+   
+</div>
+</div>`;
+
+
+for (let i = 0; i < more_3phs.length; i++){
+if(Object.keys(more_3phs[i]).length == 2){
+  const template = moreInfo(i);
+      document.getElementById('more_tb').insertAdjacentHTML('beforeend', template);
+
+}else{
+
+  const template = moreInfo_phs(i);
+      document.getElementById('more_tb').insertAdjacentHTML('beforeend', template);
+    
+    
+}
+
+}
     break;
   case "em":
    
@@ -1169,6 +1205,9 @@ for (let i = 0; i < gauge_1phs.length; i++) {
   default:
 
 }
+
+
+
 
 var options = {
           series: [{
@@ -1283,16 +1322,31 @@ function popupWin(id)
   display_phs(payload[0]);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function display_phs(payload)
 {
   var val = 0;  // Default value
-    var active = 0;  // Default active gauge index
+  var active = 0;  // Default active gauge index
 
-    // Make sure gauge[active] exists
+
    
   
-    document.getElementById('box2').innerHTML = '';
-   var passGauge2 = (i) =>`
+  document.getElementById('box2').innerHTML = '';
+  var passGauge2 = (i) =>`
 
   <svg id="ggphs_${i}">
     <g id="gphs_${i}"></g>
