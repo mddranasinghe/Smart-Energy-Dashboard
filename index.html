@@ -320,7 +320,7 @@ border: 1px solid #ccc;margin: 0 auto;
 
   width:100%;
  
-  display:block;
+  display:none;
   position: relative;
   margin: 0 auto;
 
@@ -350,6 +350,7 @@ overflow: auto;
   border-right: none;
   color: white ;
   margin-bottom:40px;
+  z-index: 9999;
 
 }
 
@@ -371,9 +372,10 @@ overflow: auto;
 
 .more_col img{
 
-  width: 40px;
-  height: 60px;
+  width: 30px;
+  height: 40px;
   padding-right:15px;
+
   transition:transform 0.4s;
 
 }
@@ -390,16 +392,29 @@ overflow: auto;
 }
 .phs_set{
 padding: 35px;
+background-color: #4b505720;
+
 
 }
-.phs_vl
-{
-
+#head {
+  display: flex;
+  align-items: center; 
+  width: 100%;
 }
+
+#head img {
+  margin-right: 10px; /* Add some space between the image and the text */
+}
+
+#head h1 {
+  text-align: center;/* Removes default margin from the heading */
+  margin: 0 auto;
+}
+
 
 </style>
 </head>
-<div id="Dashboard" style="display: none;">
+<div id="Dashboard" style="display: non;">
   <h1> Smart Energy Dashboard</h1>
  
 <div id="container">
@@ -425,10 +440,12 @@ padding: 35px;
 
 <div id="mo_in_container" >
 
-<div id="head">
-  <h1>More Info</h1>
-</div>
-
+  <div id="head">
+    <img src="resources/image/arrrow.png" style="width: 100px; height: 100px;" onclick="MoreInfoClose()">
+    <h1>More Info</h1>
+  </div>
+  
+  <br>
 <div id="more_tb">
 </div>
 
@@ -633,6 +650,14 @@ function MoreInfo()
 {
   Dashboard.style.display = 'none';
   mo_in_container.style.display='block';
+
+}
+
+
+function MoreInfoClose()
+{
+  Dashboard.style.display = 'block';
+  mo_in_container.style.display='none';
 
 }
 let isRotated = false; 
@@ -1089,10 +1114,10 @@ ${more_3phs[i].value}
 
  var moreInfo_phs = (i) =>`
 <div class="more_col" onclick="rotateImg(more_img_${i},more_phs_${i})" >
-  <div class="more_rw_lft">
+  <div class="more_rw_lft" >
   ${more_3phs[i].name}
   </div>
-  <div class="more_rw_rig" > ${more_3phs[i].value}
+  <div class="more_rw_rig"   onclick="rotateImg(more_img_${i},more_phs_${i})"> ${more_3phs[i].value} &nbsp&nbsp
 <img id="more_img_${i}" onclick="rotateImg(more_img_${i},more_phs_${i})" src="resources/image/greater.png">
   </div>
   <div class="more_phs" id='more_phs_${i}'><br>
